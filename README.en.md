@@ -122,8 +122,14 @@ Start and end of each measurement follow the movement reports of the device (`op
   * *Input day / window contact / brightness / outdoor temperature / room temperature / elevation / azimuth / external command / external block*: the value the controller currently reads from the input (attributes: source, raw value). Only for configured inputs.
   * *Drive delayed* ("Fahrt verzögert"): e.g. "Beschattung endet in 120 s", "Nachholen in 20 s", "Fahrt zurückgehalten (Aussperrschutz, wartet auf Kontakt)", "Automatische Fahrt in 3 s", otherwise "keine"; attribute `faellig_um` (due at).
   * *Last command*: the last command sent to the shutter with time and **trigger** (e.g. "Kontakt closed -> tilted: cover.set_cover_position position=20"); attribute `protokoll` = the last 12 commands. If a command shows up at the shutter that is missing here, it does not come from this integration.
-  * *Diagnostics*: `ok` or missing inputs; attributes also contain all raw values, conditions and states.
+  * *Diagnostics*: `ok`, "Eingang fehlt" (entity currently delivers no value) or "Konfigurationsfehler, Entität fehlt" (entity does not exist); attributes also contain all raw values, conditions and states.
 * Buttons *Up, Down, Stop, Back* (and *MyPosition* if a MyPosition button is configured), sensor *State* (night / day / shading / shading ending, attributes with the individual conditions), number *Position* (actual value, setting = manual position drive) and with slats *Slats*, binary sensor *Shading active*, switch *Shading* (off = no shading).
+
+## Renamed or missing entities
+
+* If an entity an instance refers to is renamed (e.g. "Recreate entity ID"), the integration takes over the new entity ID into its settings automatically. This also works for renames while the instance was not loaded (the integration remembers the internal registry ID of every entity).
+* If an entity does not exist (anymore), an entry appears under **Settings → Repairs**. A replacement entity can be selected right there; a field left empty removes the input.
+* If the MyPosition button is missing, the automation drives to the configured position instead of not driving at all; the command log shows a note.
 
 ## Lovelace card "Rollladen Steuerung"
 

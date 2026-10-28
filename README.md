@@ -120,8 +120,14 @@ Start und Ende jeder Messung richten sich nach den Fahrtmeldungen des Geräts (`
   * *Eingang Tag / Fensterkontakt / Helligkeit / Außentemperatur / Zimmertemperatur / Elevation / Azimut / Externes Kommando / Extern blockieren*: jeweils der Wert, den die Steuerung gerade vom Eingang liest (Attribute: Quelle, Rohwert). Nur für konfigurierte Eingänge.
   * *Fahrt verzögert*: z. B. „Beschattung endet in 120 s“, „Nachholen in 20 s“ oder „Fahrt zurückgehalten (Aussperrschutz, wartet auf Kontakt)“, „Automatische Fahrt in 3 s“, sonst „keine“; Attribut `faellig_um`.
   * *Letzter Befehl*: der zuletzt an das Rollo gesendete Befehl mit Uhrzeit und **Auslöser** (z. B. „Kontakt closed -> tilted: cover.set_cover_position position=20“); Attribut `protokoll` = die letzten 12 Befehle. Taucht am Rollo ein Befehl auf, der hier fehlt, kommt er nicht von dieser Integration.
-  * *Diagnose*: `ok` oder fehlende Eingänge; die Attribute enthalten zusätzlich alle Rohwerte, Bedingungen und Zustände.
+  * *Diagnose*: `ok`, „Eingang fehlt“ (Entität liefert gerade keinen Wert) oder „Konfigurationsfehler, Entität fehlt“ (Entität existiert nicht); die Attribute enthalten zusätzlich alle Rohwerte, Bedingungen und Zustände.
 * Taster *Hoch, Runter, Stopp, Zurück* (und *MyPosition*, wenn ein MyPosition-Taster konfiguriert ist), Sensor *Zustand* (Nacht / Tag / Beschattung / Beschattung endet, Attribute mit den Einzelbedingungen), Zahl *Position* (Ist-Wert, Setzen = manuelle Positionsfahrt) und bei Lamellen *Lamellen*, Binärsensor *Beschattung aktiv*, Schalter *Beschattung* (aus = keine Beschattung).
+
+## Umbenannte oder fehlende Entitäten
+
+* Wird eine Entität, auf die eine Instanz verweist, umbenannt (z. B. „Entitäts-ID neu erstellen“), übernimmt die Integration die neue Entitäts-ID automatisch in ihre Einstellungen. Das gilt auch für Umbenennungen, während die Instanz nicht geladen war (die Integration merkt sich dazu die interne Registry-ID jeder Entität).
+* Existiert eine Entität nicht (mehr), erscheint unter **Einstellungen → Reparaturen** ein Eintrag. Dort lässt sich direkt eine Ersatz-Entität auswählen; ein leer gelassenes Feld entfernt den Eingang.
+* Fehlt der MyPosition-Taster, fährt die Automatik ersatzweise auf die eingestellte Position, statt gar nicht zu fahren; im Befehlsprotokoll steht ein Hinweis.
 
 ## Lovelace-Karte „Rollladen Steuerung“
 

@@ -9,9 +9,11 @@ from pathlib import Path
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import Platform
-from homeassistant.core import HomeAssistant
+from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers import config_validation as cv
 from homeassistant.helpers import entity_registry as er
+from homeassistant.helpers import issue_registry as ir
+from homeassistant.helpers.start import async_at_started
 from homeassistant.helpers.typing import ConfigType
 
 try:
@@ -21,6 +23,7 @@ except ImportError:  # pragma: no cover
 
 from .const import DOMAIN
 from .controller import Controller
+from .entity_refs import async_resolve_stored, async_track_renames, async_update_issue, issue_id
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -105,6 +108,8 @@ async def _async_register_resource(hass: HomeAssistant, url: str) -> bool:
 
 async def async_setup_entry(hass: HomeAssistant, entry: RollladenSteuerungConfigEntry) -> bool:
     await _async_register_card(hass)  # fallback in case async_setup ran too early
+    # Entities renamed while this entry was not loaded: follow them via their registry id
+    async_resolve_stored(hass, entry)
     controller = Controller(hass, entry)
     entry.runtime_data = controller
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
@@ -116,6 +121,15 @@ async def async_setup_entry(hass: HomeAssistant, entry: RollladenSteuerungConfig
             entry, data={**entry.data, "device_type_applied": controller.device_type}
         )
     entry.async_on_unload(entry.add_update_listener(_async_update_listener))
+    # Renames while loaded are taken over into the options; missing entities -> Repairs issue
+    async_track_renames(hass, entry)
+
+    @callback
+    def _check_references(_hass: HomeAssistant | None = None) -> None:
+        async_update_issue(hass, entry)
+        controller.notify()
+
+    entry.async_on_unload(async_at_started(hass, _check_references))
     return True
 
 
@@ -138,3 +152,7 @@ async def async_unload_entry(hass: HomeAssistant, entry: RollladenSteuerungConfi
     if unloaded:
         await entry.runtime_data.async_stop()
     return unloaded
+
+
+async def async_remove_entry(hass: HomeAssistant, entry: RollladenSteuerungConfigEntry) -> None:
+    ir.async_delete_issue(hass, DOMAIN, issue_id(entry))

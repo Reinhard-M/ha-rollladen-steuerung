@@ -37,6 +37,7 @@ async def setup(hass, freezer, **opts):
     hass.states.async_set("sensor.azi", "180")
     hass.states.async_set("sensor.kontakt", "closed")
     hass.states.async_set(COVER, "open", {"current_position": 100, "supported_features": 15})
+    hass.states.async_set("button.mypos", "unknown")  # MyPosition button (exists, never pressed)
     e = Env()
     e.open = async_mock_service(hass, "cover", "open_cover")
     e.close = async_mock_service(hass, "cover", "close_cover")

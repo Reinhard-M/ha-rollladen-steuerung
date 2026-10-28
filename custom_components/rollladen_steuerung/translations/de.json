@@ -313,5 +313,37 @@
         "name": "Beschattung aktiv"
       }
     }
+  },
+  "issues": {
+    "missing_entities": {
+      "title": "Rollladen Steuerung „{title}“: Entität fehlt",
+      "fix_flow": {
+        "step": {
+          "init": {
+            "title": "Fehlende Entitäten ersetzen – {title}",
+            "description": "Die Konfiguration verweist auf Entitäten, die es nicht (mehr) gibt, z. B. nach dem Umbenennen einer Entitäts-ID:\n{entities}\n\nBitte die richtige Entität auswählen. Ein leer gelassenes Feld entfernt den Eingang aus der Konfiguration.",
+            "data": {
+              "cover": "Rollo (cover)",
+              "day_entity": "Tag bzw. Tag/Nacht (Binärsensor oder Sensor)",
+              "daynight_entity": "Tag/Nacht (veraltet)",
+              "shade_entity": "MyPosition-Taster am Gerät (leer = kein Taster)",
+              "contact_entity": "Fensterkontakt (open/closed/tilted)",
+              "brightness_entity": "Helligkeit",
+              "outdoor_entity": "Außentemperatur",
+              "indoor_entity": "Zimmertemperatur",
+              "elevation_entity": "Sonne Elevation",
+              "azimuth_entity": "Sonne Azimut",
+              "external_entity": "Externes Kommando (Sensor mit up/down/stop/mypos/pos)",
+              "block_entity": "Extern blockieren (binär, true = Automatik gesperrt)",
+              "morning_entity": "Fahrzeit morgens (nur zur Anzeige, z. B. Rollladen Zeiten)",
+              "evening_entity": "Fahrzeit abends (nur zur Anzeige)"
+            }
+          }
+        },
+        "abort": {
+          "entry_removed": "Die Instanz existiert nicht mehr."
+        }
+      }
+    }
   }
 }
