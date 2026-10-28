@@ -313,5 +313,37 @@
         "name": "Shading active"
       }
     }
+  },
+  "issues": {
+    "missing_entities": {
+      "title": "Rollladen Steuerung \"{title}\": entity missing",
+      "fix_flow": {
+        "step": {
+          "init": {
+            "title": "Replace missing entities – {title}",
+            "description": "The configuration points to entities that do not exist (anymore), e.g. after an entity ID was changed:\n{entities}\n\nPlease select the correct entity. A field left empty removes the input from the configuration.",
+            "data": {
+              "cover": "Shutter (cover)",
+              "day_entity": "Day or day/night (binary sensor or sensor)",
+              "daynight_entity": "Day/night (deprecated)",
+              "shade_entity": "MyPosition button on device (empty = no button)",
+              "contact_entity": "Window contact (open/closed/tilted)",
+              "brightness_entity": "Brightness",
+              "outdoor_entity": "Outdoor temperature",
+              "indoor_entity": "Indoor temperature",
+              "elevation_entity": "Sun elevation",
+              "azimuth_entity": "Sun azimuth",
+              "external_entity": "External command (sensor with up/down/stop/mypos/pos)",
+              "block_entity": "External block (binary, true = automation blocked)",
+              "morning_entity": "Drive time morning (display only, e.g. Rollladen Zeiten)",
+              "evening_entity": "Drive time evening (display only)"
+            }
+          }
+        },
+        "abort": {
+          "entry_removed": "The instance no longer exists."
+        }
+      }
+    }
   }
 }

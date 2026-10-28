@@ -61,6 +61,8 @@ from .const import (
 COVER_SUPPORT_POSITION = 4
 COVER_SUPPORT_TILT_POSITION = 128
 
+DAY_DOMAINS = ["binary_sensor", "sensor", "input_boolean", "switch", "input_select", "select"]
+
 OPTIONAL_ENTITIES = [
     (CONF_BRIGHTNESS, ["sensor", "input_number"]),
     (CONF_OUTDOOR, ["sensor", "input_number"]),
@@ -93,11 +95,7 @@ def _schema(hass, defaults: dict[str, Any], with_name: bool) -> vol.Schema:
     fields[
         vol.Required(CONF_DAY, default=defaults[CONF_DAY]) if defaults.get(CONF_DAY)
         else vol.Required(CONF_DAY)
-    ] = EntitySelector(
-        EntitySelectorConfig(
-            domain=["binary_sensor", "sensor", "input_boolean", "switch", "input_select", "select"]
-        )
-    )
+    ] = EntitySelector(EntitySelectorConfig(domain=DAY_DOMAINS))
     fields[
         vol.Required(CONF_DEVICE_TYPE, default=defaults.get(CONF_DEVICE_TYPE, "window"))
     ] = SelectSelector(

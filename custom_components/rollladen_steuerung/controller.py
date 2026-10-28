@@ -95,6 +95,8 @@ from .const import (
     TYPE_WINDOW,
 )
 
+from .entity_refs import is_missing, missing
+
 _LOGGER = logging.getLogger(__name__)
 
 DAY_VALUES = {"on", "day", "tag", "true"}
@@ -728,8 +730,25 @@ class Controller:
         await self._drive_target(t)
         self.notify()
 
+    def mypos_missing(self) -> bool:
+        """A MyPosition button is configured, but the entity does not exist (renamed/removed)."""
+        entity = self.opt.get(CONF_SHADE_ENTITY)
+        return bool(entity) and is_missing(self.hass, entity)
+
+    def _log_note(self, text: str) -> None:
+        self.last_action = f"{dt_util.now().strftime('%H:%M:%S')} {self._reason}: {text}"
+        self.action_log.appendleft(self.last_action)
+
     async def _drive_target(self, t: dict[str, Any]) -> None:
         self.last_auto[t["phase"]] = dict(t)
+        if t["mode"] == MODE_MYPOS and self.mypos_missing():
+            # Better a drive to the configured position than no drive at all
+            _LOGGER.warning(
+                "%s: MyPosition-Taster %s existiert nicht, fahre stattdessen auf %s %%",
+                self.entry.title, self.opt.get(CONF_SHADE_ENTITY), round(t["pos"]),
+            )
+            self._log_note(f"MyPosition-Taster {self.opt.get(CONF_SHADE_ENTITY)} fehlt, Ersatzfahrt")
+            t = {**t, "mode": MODE_POSITION}
         if t["mode"] == MODE_MYPOS:
             await self.drive_mypos()
             await self._set_tilt(t["slat"])
@@ -872,6 +891,14 @@ class Controller:
         entity = self.opt.get(CONF_SHADE_ENTITY)
         if not entity:
             _LOGGER.warning("MyPosition angefordert, aber kein MyPosition-Taster konfiguriert")
+            return
+        if is_missing(self.hass, entity):
+            _LOGGER.warning(
+                "%s: MyPosition-Taster %s existiert nicht (umbenannt oder entfernt?)",
+                self.entry.title, entity,
+            )
+            self._log_note(f"MyPosition-Taster {entity} fehlt, kein Befehl gesendet")
+            self.notify()
             return
         self._cancel_stop_timer()
         await self._press(entity)
@@ -1149,6 +1176,8 @@ class Controller:
             "extern_blockieren": raw(CONF_BLOCK),
             "fahrzeit_morgens": raw(CONF_MORNING),
             "fahrzeit_abends": raw(CONF_EVENING),
+            "mypos_taster": raw(CONF_SHADE_ENTITY),
+            "fehlende_entitäten": self.missing_entities(),
             "letztes_externes_kommando": self.last_external,
             "cover_zustand": cover.state if cover else "nicht vorhanden",
             "cover_position_gerät": cover.attributes.get("current_position") if cover else None,
@@ -1167,12 +1196,18 @@ class Controller:
         }
         return data
 
+    def missing_entities(self) -> list[str]:
+        """Configured entities that do not exist (configuration error, see Repairs)."""
+        return sorted(set(missing(self.hass, self.opt).values()))
+
     def missing_inputs(self) -> list[str]:
+        """Inputs that exist but currently deliver no value (unknown/unavailable)."""
+        gone = set(self.missing_entities())
         out = []
         for key in (CONF_DAY, CONF_BRIGHTNESS, CONF_OUTDOOR, CONF_INDOOR, CONF_ELEVATION,
                     CONF_AZIMUTH, CONF_CONTACT, CONF_COVER):
             eid = self.opt.get(key)
-            if eid and self._state(eid) is None:
+            if eid and eid not in gone and self._state(eid) is None:
                 out.append(eid)
         return out
 

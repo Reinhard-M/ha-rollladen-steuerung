@@ -4,7 +4,8 @@
   "after_dependencies": [
     "frontend",
     "http",
-    "lovelace"
+    "lovelace",
+    "repairs"
   ],
   "codeowners": [
     "@Reinhard-M"
@@ -15,5 +16,5 @@
   "iot_class": "calculated",
   "issue_tracker": "https://github.com/Reinhard-M/ha-rollladen-steuerung/issues",
   "requirements": [],
-  "version": "1.9.3"
+  "version": "1.10.0"
 }

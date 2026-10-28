@@ -70,8 +70,10 @@ class DiagnosticSensor(SteuerungEntity, SensorEntity):
 
     @property
     def native_value(self) -> str:
+        if gone := self.controller.missing_entities():
+            return ("Konfigurationsfehler, Entität fehlt: " + ", ".join(gone))[:255]
         missing = self.controller.missing_inputs()
-        return "Eingang fehlt: " + ", ".join(missing)[:200] if missing else "ok"
+        return ("Eingang fehlt: " + ", ".join(missing))[:255] if missing else "ok"
 
     @property
     def extra_state_attributes(self) -> dict:
