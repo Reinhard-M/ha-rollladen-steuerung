@@ -6,6 +6,9 @@
     "http",
     "lovelace"
   ],
+  "categories": [
+    "blinds_curtains"
+  ],
   "codeowners": [
     "@Reinhard-M"
   ],
@@ -15,5 +18,5 @@
   "iot_class": "calculated",
   "issue_tracker": "https://github.com/Reinhard-M/ha-rollladen-steuerung/issues",
   "requirements": [],
-  "version": "1.9.2"
+  "version": "1.9.3"
 }
