@@ -6,9 +6,6 @@
     "http",
     "lovelace"
   ],
-  "categories": [
-    "blinds_curtains"
-  ],
   "codeowners": [
     "@Reinhard-M"
   ],
