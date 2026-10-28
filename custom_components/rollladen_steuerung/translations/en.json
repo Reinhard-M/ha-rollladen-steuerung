@@ -1,0 +1,317 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Rollladen Steuerung",
+        "description": "Select the shutter and its inputs; only the shutter and the day source are required. All settings become entities of the device.\n\n[Documentation (README)]({docs_url})",
+        "data": {
+          "name": "Name",
+          "cover": "Shutter (cover)",
+          "day_entity": "Day or day/night (binary sensor or sensor)",
+          "brightness_entity": "Brightness",
+          "outdoor_entity": "Outdoor temperature",
+          "indoor_entity": "Indoor temperature",
+          "elevation_entity": "Sun elevation",
+          "azimuth_entity": "Sun azimuth",
+          "contact_entity": "Window contact (open/closed/tilted)",
+          "shade_entity": "MyPosition button on device (empty = no button)",
+          "position_source": "Position source",
+          "use_tilt": "Use slats",
+          "contact_open": "Contact states for open (comma)",
+          "contact_tilted": "Contact states for tilted (comma)",
+          "contact_closed": "Contact states for closed (comma)",
+          "device_type": "Device type",
+          "external_entity": "External command (sensor with up/down/stop/mypos/pos)",
+          "morning_entity": "Drive time morning (display only, e.g. Rollladen Zeiten)",
+          "evening_entity": "Drive time evening (display only)",
+          "combined_device": "Homematic device for height+slats in one command (optional)",
+          "combined_channel": "Blind actuator channel (default 4)",
+          "block_entity": "External block (binary, true = automation blocked)"
+        },
+        "data_description": {
+          "day_entity": "Day/night is provided by the separate integration \"Rollladen Zeiten\" (sensor \"Day\" or \"Day/night\"); any binary sensor/sensor works, though."
+        }
+      }
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Rollladen Steuerung",
+        "data": {
+          "cover": "Shutter (cover)",
+          "day_entity": "Day or day/night (binary sensor or sensor)",
+          "brightness_entity": "Brightness",
+          "outdoor_entity": "Outdoor temperature",
+          "indoor_entity": "Indoor temperature",
+          "elevation_entity": "Sun elevation",
+          "azimuth_entity": "Sun azimuth",
+          "contact_entity": "Window contact (open/closed/tilted)",
+          "shade_entity": "MyPosition button on device (empty = no button)",
+          "position_source": "Position source",
+          "use_tilt": "Use slats",
+          "contact_open": "Contact states for open (comma)",
+          "contact_tilted": "Contact states for tilted (comma)",
+          "contact_closed": "Contact states for closed (comma)",
+          "device_type": "Device type",
+          "external_entity": "External command (sensor with up/down/stop/mypos/pos)",
+          "morning_entity": "Drive time morning (display only, e.g. Rollladen Zeiten)",
+          "evening_entity": "Drive time evening (display only)",
+          "combined_device": "Homematic device for height+slats in one command (optional)",
+          "combined_channel": "Blind actuator channel (default 4)",
+          "block_entity": "External block (binary, true = automation blocked)"
+        },
+        "description": "Change the inputs and options of this shutter.\n\n[Documentation (README)]({docs_url})",
+        "data_description": {
+          "day_entity": "Day/night is provided by the separate integration \"Rollladen Zeiten\" (sensor \"Day\" or \"Day/night\"); any binary sensor/sensor works, though."
+        }
+      }
+    }
+  },
+  "selector": {
+    "position_source": {
+      "options": {
+        "device": "From device (position value)",
+        "internal": "Internal (from travel times)"
+      }
+    },
+    "device_type": {
+      "options": {
+        "window": "Window",
+        "door": "Door",
+        "awning": "Awning"
+      }
+    }
+  },
+  "entity": {
+    "number": {
+      "night_open_pos": {
+        "name": "Night height window open"
+      },
+      "night_closed_pos": {
+        "name": "Night height window closed"
+      },
+      "night_tilted_pos": {
+        "name": "Night height window tilted"
+      },
+      "shade_pos": {
+        "name": "Shading height"
+      },
+      "shade_elevation_min": {
+        "name": "Shading elevation from"
+      },
+      "shade_azimuth_from": {
+        "name": "Shading azimuth from"
+      },
+      "shade_azimuth_to": {
+        "name": "Shading azimuth to"
+      },
+      "shade_outdoor_temp": {
+        "name": "Shading outdoor temperature from"
+      },
+      "shade_indoor_temp": {
+        "name": "Shading indoor temperature from"
+      },
+      "shade_brightness_start": {
+        "name": "Shading brightness start"
+      },
+      "shade_brightness_end": {
+        "name": "Shading brightness end"
+      },
+      "shade_end_delay": {
+        "name": "Shading end delay"
+      },
+      "catchup_delay": {
+        "name": "Catch-up delay"
+      },
+      "slat_night_open": {
+        "name": "Night slats window open"
+      },
+      "slat_night_closed": {
+        "name": "Night slats window closed"
+      },
+      "slat_night_tilted": {
+        "name": "Night slats window tilted"
+      },
+      "slat_shade": {
+        "name": "Shading slats"
+      },
+      "slat_day": {
+        "name": "Day slats"
+      },
+      "day_pos": {
+        "name": "Day height"
+      },
+      "target_position": {
+        "name": "Position"
+      },
+      "target_slat": {
+        "name": "Slats"
+      },
+      "mypos_pos": {
+        "name": "MyPosition height (estimated)"
+      },
+      "time_down": {
+        "name": "Time down"
+      },
+      "time_up": {
+        "name": "Time up"
+      },
+      "auto_delay": {
+        "name": "Automatic drive delay"
+      }
+    },
+    "select": {
+      "night_open_mode": {
+        "name": "Night window open",
+        "state": {
+          "position": "Position",
+          "mypos": "MyPosition"
+        }
+      },
+      "night_closed_mode": {
+        "name": "Night window closed",
+        "state": {
+          "position": "Position",
+          "mypos": "MyPosition"
+        }
+      },
+      "night_tilted_mode": {
+        "name": "Night window tilted",
+        "state": {
+          "position": "Position",
+          "mypos": "MyPosition"
+        }
+      },
+      "shade_mode": {
+        "name": "Shading type",
+        "state": {
+          "position": "Position",
+          "mypos": "MyPosition"
+        }
+      },
+      "shade_end": {
+        "name": "Shading end",
+        "state": {
+          "previous": "Previous position",
+          "up": "Day position"
+        }
+      },
+      "calibration": {
+        "name": "Calibration",
+        "state": {
+          "off": "Off",
+          "down": "1 Down (from top)",
+          "up": "2 Up (from bottom)",
+          "mypos": "3 MyPosition (from top)"
+        }
+      },
+      "day_mode": {
+        "name": "Day height type",
+        "state": {
+          "position": "Position",
+          "mypos": "MyPosition"
+        }
+      }
+    },
+    "switch": {
+      "lockout": {
+        "name": "Lock-out protection"
+      },
+      "shading_enabled": {
+        "name": "Shading"
+      },
+      "hide_times": {
+        "name": "Hide travel times"
+      },
+      "auto_hold": {
+        "name": "Automation blocked"
+      }
+    },
+    "button": {
+      "button_up": {
+        "name": "Up"
+      },
+      "button_down": {
+        "name": "Down"
+      },
+      "button_stop": {
+        "name": "Stop"
+      },
+      "button_mypos": {
+        "name": "MyPosition"
+      },
+      "button_back": {
+        "name": "Back"
+      }
+    },
+    "sensor": {
+      "state": {
+        "name": "State",
+        "state": {
+          "unknown": "Unknown",
+          "night": "Night",
+          "day": "Day",
+          "shading": "Shading",
+          "shading_ending": "Shading ending"
+        }
+      },
+      "diagnostics": {
+        "name": "Diagnostics"
+      },
+      "input_day": {
+        "name": "Input day",
+        "state": {
+          "day": "Day",
+          "night": "Night"
+        }
+      },
+      "input_contact": {
+        "name": "Input window contact",
+        "state": {
+          "open": "Open",
+          "tilted": "Tilted",
+          "closed": "Closed"
+        }
+      },
+      "input_brightness": {
+        "name": "Input brightness"
+      },
+      "input_outdoor": {
+        "name": "Input outdoor temperature"
+      },
+      "input_indoor": {
+        "name": "Input indoor temperature"
+      },
+      "input_elevation": {
+        "name": "Input elevation"
+      },
+      "input_azimuth": {
+        "name": "Input azimuth"
+      },
+      "input_external": {
+        "name": "Input external command"
+      },
+      "delay_status": {
+        "name": "Move delayed"
+      },
+      "last_command": {
+        "name": "Last command"
+      },
+      "input_morning": {
+        "name": "Input drive time morning"
+      },
+      "input_evening": {
+        "name": "Input drive time evening"
+      },
+      "input_block": {
+        "name": "Input external block"
+      }
+    },
+    "binary_sensor": {
+      "shading": {
+        "name": "Shading active"
+      }
+    }
+  }
+}

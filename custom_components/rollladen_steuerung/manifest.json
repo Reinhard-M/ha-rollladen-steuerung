@@ -1,0 +1,19 @@
+{
+  "domain": "rollladen_steuerung",
+  "name": "Rollladen Steuerung",
+  "after_dependencies": [
+    "frontend",
+    "http",
+    "lovelace"
+  ],
+  "codeowners": [
+    "@Reinhard-M"
+  ],
+  "config_flow": true,
+  "documentation": "https://github.com/Reinhard-M/ha-rollladen-steuerung",
+  "integration_type": "service",
+  "iot_class": "calculated",
+  "issue_tracker": "https://github.com/Reinhard-M/ha-rollladen-steuerung/issues",
+  "requirements": [],
+  "version": "1.9.2"
+}

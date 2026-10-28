@@ -1,0 +1,317 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Rollladen Steuerung",
+        "description": "Rollo und Eingänge wählen; nur Rollo und Tag-Quelle sind Pflicht. Die Einstellwerte findest du danach als Entitäten des Geräts.\n\n[Dokumentation (README)]({docs_url})",
+        "data": {
+          "name": "Name",
+          "cover": "Rollo (cover)",
+          "day_entity": "Tag bzw. Tag/Nacht (Binärsensor oder Sensor)",
+          "brightness_entity": "Helligkeit",
+          "outdoor_entity": "Außentemperatur",
+          "indoor_entity": "Zimmertemperatur",
+          "elevation_entity": "Sonne Elevation",
+          "azimuth_entity": "Sonne Azimut",
+          "contact_entity": "Fensterkontakt (open/closed/tilted)",
+          "shade_entity": "MyPosition-Taster am Gerät (leer = kein Taster)",
+          "position_source": "Positionsquelle",
+          "use_tilt": "Lamellen verwenden",
+          "contact_open": "Kontakt-Zustände für „offen“ (Komma)",
+          "contact_tilted": "Kontakt-Zustände für „gekippt“ (Komma)",
+          "contact_closed": "Kontakt-Zustände für „geschlossen“ (Komma)",
+          "device_type": "Gerätetyp",
+          "external_entity": "Externes Kommando (Sensor mit up/down/stop/mypos/pos)",
+          "morning_entity": "Fahrzeit morgens (nur zur Anzeige, z. B. Rollladen Zeiten)",
+          "evening_entity": "Fahrzeit abends (nur zur Anzeige)",
+          "combined_device": "Homematic-Gerät für Höhe+Lamellen in einem Befehl (optional)",
+          "combined_channel": "Kanal des Jalousie-Aktors (Standard 4)",
+          "block_entity": "Extern blockieren (binär, true = Automatik gesperrt)"
+        },
+        "data_description": {
+          "day_entity": "Tag/Nacht liefert die separate Integration „Rollladen Zeiten“ (Sensor „Tag“ bzw. „Tag/Nacht“); es geht aber jeder Binärsensor/Sensor."
+        }
+      }
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Rollladen Steuerung",
+        "data": {
+          "cover": "Rollo (cover)",
+          "day_entity": "Tag bzw. Tag/Nacht (Binärsensor oder Sensor)",
+          "brightness_entity": "Helligkeit",
+          "outdoor_entity": "Außentemperatur",
+          "indoor_entity": "Zimmertemperatur",
+          "elevation_entity": "Sonne Elevation",
+          "azimuth_entity": "Sonne Azimut",
+          "contact_entity": "Fensterkontakt (open/closed/tilted)",
+          "shade_entity": "MyPosition-Taster am Gerät (leer = kein Taster)",
+          "position_source": "Positionsquelle",
+          "use_tilt": "Lamellen verwenden",
+          "contact_open": "Kontakt-Zustände für „offen“ (Komma)",
+          "contact_tilted": "Kontakt-Zustände für „gekippt“ (Komma)",
+          "contact_closed": "Kontakt-Zustände für „geschlossen“ (Komma)",
+          "device_type": "Gerätetyp",
+          "external_entity": "Externes Kommando (Sensor mit up/down/stop/mypos/pos)",
+          "morning_entity": "Fahrzeit morgens (nur zur Anzeige, z. B. Rollladen Zeiten)",
+          "evening_entity": "Fahrzeit abends (nur zur Anzeige)",
+          "combined_device": "Homematic-Gerät für Höhe+Lamellen in einem Befehl (optional)",
+          "combined_channel": "Kanal des Jalousie-Aktors (Standard 4)",
+          "block_entity": "Extern blockieren (binär, true = Automatik gesperrt)"
+        },
+        "description": "Eingänge und Optionen dieses Rollos ändern.\n\n[Dokumentation (README)]({docs_url})",
+        "data_description": {
+          "day_entity": "Tag/Nacht liefert die separate Integration „Rollladen Zeiten“ (Sensor „Tag“ bzw. „Tag/Nacht“); es geht aber jeder Binärsensor/Sensor."
+        }
+      }
+    }
+  },
+  "selector": {
+    "position_source": {
+      "options": {
+        "device": "Vom Gerät (Positionswert)",
+        "internal": "Intern (aus Laufzeiten)"
+      }
+    },
+    "device_type": {
+      "options": {
+        "window": "Fenster",
+        "door": "Tür",
+        "awning": "Markise"
+      }
+    }
+  },
+  "entity": {
+    "number": {
+      "night_open_pos": {
+        "name": "Nacht Höhe Fenster offen"
+      },
+      "night_closed_pos": {
+        "name": "Nacht Höhe Fenster geschlossen"
+      },
+      "night_tilted_pos": {
+        "name": "Nacht Höhe Fenster gekippt"
+      },
+      "shade_pos": {
+        "name": "Beschattung Höhe"
+      },
+      "shade_elevation_min": {
+        "name": "Beschattung Elevation ab"
+      },
+      "shade_azimuth_from": {
+        "name": "Beschattung Azimut von"
+      },
+      "shade_azimuth_to": {
+        "name": "Beschattung Azimut bis"
+      },
+      "shade_outdoor_temp": {
+        "name": "Beschattung Außentemperatur ab"
+      },
+      "shade_indoor_temp": {
+        "name": "Beschattung Zimmertemperatur ab"
+      },
+      "shade_brightness_start": {
+        "name": "Beschattung Helligkeit Start"
+      },
+      "shade_brightness_end": {
+        "name": "Beschattung Helligkeit Ende"
+      },
+      "shade_end_delay": {
+        "name": "Beschattung Ende-Verzögerung"
+      },
+      "catchup_delay": {
+        "name": "Nachhol-Verzögerung"
+      },
+      "slat_night_open": {
+        "name": "Nacht Lamellen Fenster offen"
+      },
+      "slat_night_closed": {
+        "name": "Nacht Lamellen Fenster geschlossen"
+      },
+      "slat_night_tilted": {
+        "name": "Nacht Lamellen Fenster gekippt"
+      },
+      "slat_shade": {
+        "name": "Beschattung Lamellen"
+      },
+      "slat_day": {
+        "name": "Tag Lamellen"
+      },
+      "day_pos": {
+        "name": "Tag Höhe"
+      },
+      "target_position": {
+        "name": "Position"
+      },
+      "target_slat": {
+        "name": "Lamellen"
+      },
+      "mypos_pos": {
+        "name": "MyPosition Höhe (geschätzt)"
+      },
+      "time_down": {
+        "name": "Laufzeit runter"
+      },
+      "time_up": {
+        "name": "Laufzeit hoch"
+      },
+      "auto_delay": {
+        "name": "Fahrverzögerung automatisch"
+      }
+    },
+    "select": {
+      "night_open_mode": {
+        "name": "Nacht Fenster offen",
+        "state": {
+          "position": "Position",
+          "mypos": "MyPosition"
+        }
+      },
+      "night_closed_mode": {
+        "name": "Nacht Fenster geschlossen",
+        "state": {
+          "position": "Position",
+          "mypos": "MyPosition"
+        }
+      },
+      "night_tilted_mode": {
+        "name": "Nacht Fenster gekippt",
+        "state": {
+          "position": "Position",
+          "mypos": "MyPosition"
+        }
+      },
+      "shade_mode": {
+        "name": "Beschattung Art",
+        "state": {
+          "position": "Position",
+          "mypos": "MyPosition"
+        }
+      },
+      "shade_end": {
+        "name": "Beschattung Ende",
+        "state": {
+          "previous": "Vorherige Position",
+          "up": "Tagesposition"
+        }
+      },
+      "calibration": {
+        "name": "Kalibrierung",
+        "state": {
+          "off": "Aus",
+          "down": "1 Runter (von oben)",
+          "up": "2 Hoch (von unten)",
+          "mypos": "3 MyPosition (von oben)"
+        }
+      },
+      "day_mode": {
+        "name": "Tag Höhe Art",
+        "state": {
+          "position": "Position",
+          "mypos": "MyPosition"
+        }
+      }
+    },
+    "switch": {
+      "lockout": {
+        "name": "Aussperrschutz"
+      },
+      "shading_enabled": {
+        "name": "Beschattung"
+      },
+      "hide_times": {
+        "name": "Fahrzeiten ausblenden"
+      },
+      "auto_hold": {
+        "name": "Automatik gesperrt"
+      }
+    },
+    "button": {
+      "button_up": {
+        "name": "Hoch"
+      },
+      "button_down": {
+        "name": "Runter"
+      },
+      "button_stop": {
+        "name": "Stopp"
+      },
+      "button_mypos": {
+        "name": "MyPosition"
+      },
+      "button_back": {
+        "name": "Zurück"
+      }
+    },
+    "sensor": {
+      "state": {
+        "name": "Zustand",
+        "state": {
+          "unknown": "Unbekannt",
+          "night": "Nacht",
+          "day": "Tag",
+          "shading": "Beschattung",
+          "shading_ending": "Beschattung endet"
+        }
+      },
+      "diagnostics": {
+        "name": "Diagnose"
+      },
+      "input_day": {
+        "name": "Eingang Tag",
+        "state": {
+          "day": "Tag",
+          "night": "Nacht"
+        }
+      },
+      "input_contact": {
+        "name": "Eingang Fensterkontakt",
+        "state": {
+          "open": "Offen",
+          "tilted": "Gekippt",
+          "closed": "Geschlossen"
+        }
+      },
+      "input_brightness": {
+        "name": "Eingang Helligkeit"
+      },
+      "input_outdoor": {
+        "name": "Eingang Außentemperatur"
+      },
+      "input_indoor": {
+        "name": "Eingang Zimmertemperatur"
+      },
+      "input_elevation": {
+        "name": "Eingang Elevation"
+      },
+      "input_azimuth": {
+        "name": "Eingang Azimut"
+      },
+      "input_external": {
+        "name": "Eingang Externes Kommando"
+      },
+      "delay_status": {
+        "name": "Fahrt verzögert"
+      },
+      "last_command": {
+        "name": "Letzter Befehl"
+      },
+      "input_morning": {
+        "name": "Eingang Fahrzeit morgens"
+      },
+      "input_evening": {
+        "name": "Eingang Fahrzeit abends"
+      },
+      "input_block": {
+        "name": "Eingang Extern blockieren"
+      }
+    },
+    "binary_sensor": {
+      "shading": {
+        "name": "Beschattung aktiv"
+      }
+    }
+  }
+}
