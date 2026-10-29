@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.10.2
+
+* Version alignment: the manifest now matches the release tag (v1.10.1 was tagged with manifest version 1.10.0).
+* CI: the HACS action runs without ignored checks (required for the HACS default list).
+
 ## 1.10.0
 
 * Renamed entities are followed automatically: the new entity ID is taken over into the settings, also for renames while the instance was not loaded (registry ID is stored).
