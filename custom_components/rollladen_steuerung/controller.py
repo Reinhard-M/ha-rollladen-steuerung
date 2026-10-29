@@ -18,6 +18,7 @@ reacts to *events*, it never polls the position.
 """
 from __future__ import annotations
 
+import asyncio
 import logging
 import re
 from collections import deque
@@ -25,7 +26,7 @@ from typing import Any, Callable
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import STATE_UNAVAILABLE, STATE_UNKNOWN
-from homeassistant.core import Event, HomeAssistant, callback
+from homeassistant.core import CoreState, Event, HomeAssistant, callback
 from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers import entity_registry as er
 from homeassistant.helpers.dispatcher import async_dispatcher_send
@@ -88,6 +89,7 @@ from .const import (
     SELECTS,
     SHADE_MYPOS,
     SLAT_KEYS,
+    START_WAIT_MAX,
     SWITCHES,
     TIME_KEYS,
     TYPE_AWNING,
@@ -241,6 +243,10 @@ class Controller:
         self._catchup_cancel: Callable[[], None] | None = None
         self._stop_cancel: Callable[[], None] | None = None
         self._unsubs: list[Callable[[], None]] = []
+        # Start lock: commands wait until HA runs and the devices are available (see _deps_ready)
+        self._ready = asyncio.Event()
+        self._ready_task: asyncio.Task | None = None
+        self._stopped = False
 
     # ------------------------------------------------------------------ Helpers
     @property
@@ -438,9 +444,47 @@ class Controller:
         )
         watch([CONF_COVER], self._on_cover_event)
         await self.async_apply_hidden()
+        if self._deps_ready():
+            self._ready.set()
+        else:
+            self._ready_task = self.hass.async_create_background_task(
+                self._async_wait_ready(), f"{DOMAIN}_wait_ready_{self.entry.entry_id}"
+            )
         self.notify()  # show the switch state after taking over the input
 
+    def _deps_ready(self) -> bool:
+        """Can commands be sent? HA running, cover available, Homematic service present if needed."""
+        if self.hass.state is not CoreState.running:
+            return False
+        st = self.hass.states.get(self.cover)
+        if st is None or st.state == STATE_UNAVAILABLE:
+            return False
+        if self.combined and not self.hass.services.has_service("homematicip_local", "put_paramset"):
+            return False
+        return True
+
+    async def _async_wait_ready(self) -> None:
+        """After a HA start, hold commands back until the devices are there (at most START_WAIT_MAX s)."""
+        for _ in range(START_WAIT_MAX):
+            if self._stopped:
+                return
+            if self._deps_ready():
+                break
+            await asyncio.sleep(1)
+        else:
+            _LOGGER.warning(
+                "%s: %s nach %s s noch nicht bereit - Befehle werden trotzdem gesendet",
+                self.entry.title, self.cover, START_WAIT_MAX,
+            )
+        self._ready_task = None
+        self._ready.set()
+
     async def async_stop(self) -> None:
+        self._stopped = True
+        if self._ready_task:
+            self._ready_task.cancel()
+            self._ready_task = None
+        self._ready.set()  # release waiting commands; they are dropped (see _call)
         for unsub in self._unsubs:
             unsub()
         self._unsubs.clear()
@@ -851,6 +895,11 @@ class Controller:
             f"{dt_util.now().strftime('%H:%M:%S')} {self._reason}: {domain}.{service} {extra}".strip()
         )
         self.action_log.appendleft(self.last_action)
+        if not self._ready.is_set():
+            _LOGGER.debug("%s: %s.%s wartet auf die Startsperre", self.entry.title, domain, service)
+            await self._ready.wait()
+            if self._stopped:
+                return
         try:
             await self.hass.services.async_call(domain, service, data, blocking=True)
         except HomeAssistantError as err:

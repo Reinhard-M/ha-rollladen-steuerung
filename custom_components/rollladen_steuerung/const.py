@@ -165,3 +165,6 @@ EXTERNAL_MAP = {
 POSITION_PATTERN = r"^(?:position|pos|h(?:ö|oe)he)?\s*[:=_ ]?\s*(-?\d+(?:[.,]\d+)?)\s*%?$"
 
 BUTTONS = [CMD_UP, CMD_DOWN, CMD_STOP, CMD_MYPOS, CMD_BACK]
+
+# Start lock: max. seconds commands wait after a HA start for cover / Homematic service
+START_WAIT_MAX = 300

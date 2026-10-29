@@ -682,3 +682,23 @@ async def test_hold_with_auto_delay_keeps_waiting_drive(hass, freezer):
     await hass.services.async_call("switch", "turn_off", {"entity_id": e.ids["auto_hold"]}, blocking=True)
     await tick(e, 6)
     assert e.pos[-1].data["position"] == 0
+
+
+async def test_start_lock_waits_for_cover(hass, freezer):
+    """Commands sent while the cover is not yet available wait for it instead of getting lost."""
+    import asyncio
+
+    e = await setup(hass, freezer)
+    c = e.c
+    # simulate a fresh start: cover not available yet, start lock active
+    hass.states.async_set(COVER, "unavailable")
+    c._ready.clear()
+    c._ready_task = hass.async_create_background_task(c._async_wait_ready(), "test_wait_ready")
+    task = hass.async_create_task(c.drive_stop())
+    await asyncio.sleep(0.1)
+    assert len(e.stop) == 0  # held back
+    hass.states.async_set(COVER, "open", {"current_position": 100, "supported_features": 15})
+    await asyncio.sleep(1.2)
+    await task
+    await hass.async_block_till_done()
+    assert len(e.stop) == 1  # sent once the cover is there

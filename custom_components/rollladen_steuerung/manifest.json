@@ -3,6 +3,7 @@
   "name": "Rollladen Steuerung",
   "after_dependencies": [
     "frontend",
+    "homematicip_local",
     "http",
     "lovelace",
     "repairs"
@@ -16,5 +17,5 @@
   "iot_class": "calculated",
   "issue_tracker": "https://github.com/Reinhard-M/ha-rollladen-steuerung/issues",
   "requirements": [],
-  "version": "1.10.0"
+  "version": "1.10.1"
 }
