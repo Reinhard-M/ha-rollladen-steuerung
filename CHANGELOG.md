@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.10.3
+
+* The settings dialog now shows the name of the service instance ("Dienst: …") at the top, so it is clear which control is being edited.
+
 ## 1.10.2
 
 * Version alignment: the manifest now matches the release tag (v1.10.1 was tagged with manifest version 1.10.0).

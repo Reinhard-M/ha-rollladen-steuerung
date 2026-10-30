@@ -61,7 +61,7 @@
           "combined_channel": "Kanal des Jalousie-Aktors (Standard 4)",
           "block_entity": "Extern blockieren (binär, true = Automatik gesperrt)"
         },
-        "description": "Eingänge und Optionen dieses Rollos ändern.\n\n[Dokumentation (README)]({docs_url})",
+        "description": "**Dienst: {name}**\n\nEingänge und Optionen dieses Rollos ändern.\n\n[Dokumentation (README)]({docs_url})",
         "data_description": {
           "day_entity": "Tag/Nacht liefert die separate Integration „Rollladen Zeiten“ (Sensor „Tag“ bzw. „Tag/Nacht“); es geht aber jeder Binärsensor/Sensor."
         }

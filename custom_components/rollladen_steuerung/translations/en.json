@@ -61,7 +61,7 @@
           "combined_channel": "Blind actuator channel (default 4)",
           "block_entity": "External block (binary, true = automation blocked)"
         },
-        "description": "Change the inputs and options of this shutter.\n\n[Documentation (README)]({docs_url})",
+        "description": "**Service: {name}**\n\nChange the inputs and options of this shutter.\n\n[Documentation (README)]({docs_url})",
         "data_description": {
           "day_entity": "Day/night is provided by the separate integration \"Rollladen Zeiten\" (sensor \"Day\" or \"Day/night\"); any binary sensor/sensor works, though."
         }

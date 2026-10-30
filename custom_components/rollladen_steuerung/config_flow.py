@@ -168,5 +168,8 @@ class RollladenSteuerungOptionsFlow(OptionsFlow):
         return self.async_show_form(
             step_id="init",
             data_schema=_schema(self.hass, defaults, with_name=False),
-            description_placeholders={"docs_url": docs_url(self.hass.config.language)},
+            description_placeholders={
+                "docs_url": docs_url(self.hass.config.language),
+                "name": self.config_entry.title,
+            },
         )
