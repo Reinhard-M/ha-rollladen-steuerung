@@ -73,10 +73,29 @@ async def test_missing_entity_creates_issue_and_fix_flow_repairs(hass, freezer):
     assert result["type"] == "form" and "shade_entity" in result["data_schema"].schema
     result = await flow.async_step_init({"shade_entity": "button.mypos"})
     await hass.async_block_till_done()
+    assert result["type"] == "form" and result["step_id"] == "done"
+    assert result["description_placeholders"]["title"] == entry.title
+    assert "button.gibt_es_nicht → button.mypos" in result["description_placeholders"]["changes"]
+    result = await flow.async_step_done({})
     assert result["type"] == "create_entry"
     assert entry.options["shade_entity"] == "button.mypos"
     assert _issue(hass, entry) is None
     assert hass.states.get(e.ids["diagnostics"]).state == "ok"
+
+
+async def test_fix_flow_nothing_missing_names_instance_and_unavailable(hass, freezer):
+    """Entity came back (only 'unavailable'): no bare 'problem fixed', but a clear abort."""
+    e = await setup(hass, freezer, shade_entity="button.gibt_es_nicht")
+    entry = e.c.entry
+    hass.states.async_set("button.gibt_es_nicht", "unavailable")
+    await hass.async_block_till_done()
+    flow = MissingEntitiesFlow(entry.entry_id)
+    flow.hass = hass
+    result = await flow.async_step_init()
+    assert result["type"] == "abort" and result["reason"] == "nothing_to_fix_unavailable"
+    assert result["description_placeholders"]["title"] == entry.title
+    assert "button.gibt_es_nicht" in result["description_placeholders"]["entities"]
+    assert _issue(hass, entry) is None
 
 
 async def test_fix_flow_empty_field_removes_input(hass, freezer):
@@ -84,7 +103,8 @@ async def test_fix_flow_empty_field_removes_input(hass, freezer):
     entry = e.c.entry
     flow = MissingEntitiesFlow(entry.entry_id)
     flow.hass = hass
-    await flow.async_step_init({})
+    result = await flow.async_step_init({})
+    assert result["step_id"] == "done"
     await hass.async_block_till_done()
     assert "shade_entity" not in entry.options
     assert _issue(hass, entry) is None

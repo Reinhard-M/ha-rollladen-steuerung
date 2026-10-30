@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.10.5
+
+* Repairs: the dialog no longer ends with a bare "The problem is fixed!". If the reported entities exist again, it now says which instance it was about and that there was nothing to repair; entities that exist but are only "unavailable" are listed (this is not a missing entity).
+* After replacing entities, a confirmation names the instance and shows what was changed (old entity → new entity).
+
 ## 1.10.4
 
 * Start lock after a Home Assistant start: drive commands wait until HA is running, the cover is available and (with the combined Homematic control) `homematicip_local.put_paramset` exists, at most 5 minutes. Prevents lost commands and the "Referenced entities … are missing" / "Action homematicip_local.put_paramset not found" warnings during startup.

@@ -338,10 +338,16 @@
               "morning_entity": "Fahrzeit morgens (nur zur Anzeige, z. B. Rollladen Zeiten)",
               "evening_entity": "Fahrzeit abends (nur zur Anzeige)"
             }
+          },
+          "done": {
+            "title": "Rollladen Steuerung „{title}“: repariert",
+            "description": "In der Instanz „{title}“ der Integration Rollladen Steuerung wurde die Konfiguration angepasst:\n{changes}\n\nMit „Absenden“ schließt du diese Meldung ab."
           }
         },
         "abort": {
-          "entry_removed": "Die Instanz existiert nicht mehr."
+          "entry_removed": "Die Instanz existiert nicht mehr.",
+          "nothing_to_fix": "Rollladen Steuerung „{title}“: Es gibt nichts zu reparieren. Alle Entitäten dieser Instanz sind in Home Assistant vorhanden, die Meldung ist erledigt.",
+          "nothing_to_fix_unavailable": "Rollladen Steuerung „{title}“: Es gibt nichts zu reparieren – die Entitäten sind in Home Assistant vorhanden, werden aber derzeit als „nicht verfügbar“ gemeldet:\n{entities}\n\nDas ist keine fehlende Entität. Prüfe die Integration bzw. das Gerät, das diese Entitäten liefert, oder wähle in den Einstellungen der Instanz eine andere Entität."
         }
       }
     }

@@ -338,10 +338,16 @@
               "morning_entity": "Drive time morning (display only, e.g. Rollladen Zeiten)",
               "evening_entity": "Drive time evening (display only)"
             }
+          },
+          "done": {
+            "title": "Rollladen Steuerung \"{title}\": repaired",
+            "description": "The configuration of the instance \"{title}\" of the Rollladen Steuerung integration was changed:\n{changes}\n\nSelect \"Submit\" to close this notice."
           }
         },
         "abort": {
-          "entry_removed": "The instance no longer exists."
+          "entry_removed": "The instance no longer exists.",
+          "nothing_to_fix": "Rollladen Steuerung \"{title}\": nothing to repair. All entities of this instance exist in Home Assistant, the notice is resolved.",
+          "nothing_to_fix_unavailable": "Rollladen Steuerung \"{title}\": nothing to repair – the entities exist in Home Assistant but are currently reported as \"unavailable\":\n{entities}\n\nThis is not a missing entity. Check the integration or device that provides these entities, or pick another entity in the instance settings."
         }
       }
     }
