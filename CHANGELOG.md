@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.10.4
+
+* Start lock after a Home Assistant start: drive commands wait until HA is running, the cover is available and (with the combined Homematic control) `homematicip_local.put_paramset` exists, at most 5 minutes. Prevents lost commands and the "Referenced entities … are missing" / "Action homematicip_local.put_paramset not found" warnings during startup.
+* `homematicip_local` added to `after_dependencies`, so the integration is set up after the Homematic integration when both are present.
+
 ## 1.10.3
 
 * The settings dialog now shows the name of the service instance ("Dienst: …") at the top, so it is clear which control is being edited.
