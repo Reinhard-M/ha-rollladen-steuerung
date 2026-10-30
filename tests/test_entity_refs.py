@@ -76,6 +76,7 @@ async def test_missing_entity_creates_issue_and_fix_flow_repairs(hass, freezer):
     assert result["type"] == "form" and result["step_id"] == "done"
     assert result["description_placeholders"]["title"] == entry.title
     assert "button.gibt_es_nicht → button.mypos" in result["description_placeholders"]["changes"]
+    assert result["description_placeholders"]["hint"] == ""
     result = await flow.async_step_done({})
     assert result["type"] == "create_entry"
     assert entry.options["shade_entity"] == "button.mypos"
@@ -129,3 +130,25 @@ async def test_missing_mypos_button_falls_back_to_position(hass, freezer):
     assert not pressed
     assert e.pos and e.pos[-1].data["position"] == 20  # night_tilted_pos instead of no drive
     assert "fehlt" in e.c.last_action or any("fehlt" in x for x in e.c.action_log)
+
+
+async def test_fix_flow_disabled_entity_gives_reason_and_unchanged_hint(hass, freezer):
+    reg = er.async_get(hass)
+    ent = reg.async_get_or_create(
+        "button", "mqtt", "uid_off", suggested_object_id="aus",
+        disabled_by=er.RegistryEntryDisabler.INTEGRATION,
+    )
+    e = await setup(hass, freezer, shade_entity=ent.entity_id)
+    entry = e.c.entry
+    flow = MissingEntitiesFlow(entry.entry_id)
+    flow.hass = hass
+    result = await flow.async_step_init()
+    assert result["type"] == "form"
+    assert "disabled" in result["description_placeholders"]["entities"]  # English (test default)
+    hass.config.language = "de"
+    result = await flow.async_step_init()
+    assert "deaktiviert" in result["description_placeholders"]["entities"]
+    result = await flow.async_step_init({"shade_entity": ent.entity_id})  # same entity again
+    assert result["step_id"] == "done"
+    assert "unverändert" in result["description_placeholders"]["changes"]
+    assert "Hinweis" in result["description_placeholders"]["hint"]

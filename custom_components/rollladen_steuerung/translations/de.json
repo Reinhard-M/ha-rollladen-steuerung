@@ -321,7 +321,7 @@
         "step": {
           "init": {
             "title": "Fehlende Entitäten ersetzen – {title}",
-            "description": "Die Konfiguration verweist auf Entitäten, die es nicht (mehr) gibt, z. B. nach dem Umbenennen einer Entitäts-ID:\n{entities}\n\nBitte die richtige Entität auswählen. Ein leer gelassenes Feld entfernt den Eingang aus der Konfiguration.",
+            "description": "Die Konfiguration verweist auf Entitäten, die nicht nutzbar sind (nicht vorhanden oder deaktiviert, z. B. weil das Gerät oder die Integration abgeschaltet wurde bzw. eine Entitäts-ID geändert wurde):\n{entities}\n\nBitte die richtige Entität auswählen. Ein leer gelassenes Feld entfernt den Eingang aus der Konfiguration.",
             "data": {
               "cover": "Rollo (cover)",
               "day_entity": "Tag bzw. Tag/Nacht (Binärsensor oder Sensor)",
@@ -340,8 +340,8 @@
             }
           },
           "done": {
-            "title": "Rollladen Steuerung „{title}“: repariert",
-            "description": "In der Instanz „{title}“ der Integration Rollladen Steuerung wurde die Konfiguration angepasst:\n{changes}\n\nMit „Absenden“ schließt du diese Meldung ab."
+            "title": "Rollladen Steuerung „{title}“: Ergebnis",
+            "description": "Ergebnis für die Instanz „{title}“ der Integration Rollladen Steuerung:\n{changes}\n\n{hint}\n\nMit „Absenden“ schließt du diese Meldung ab."
           }
         },
         "abort": {

@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.10.6
+
+* Repairs: the dialog now says why an entity counts as missing ("does not exist" or "disabled (device or integration switched off)").
+* If the same entity is confirmed again, the result says "unchanged, still disabled" instead of "entity → same entity", with a hint how to enable it or pick another one. The notice stays until the entity is usable.
+
 ## 1.10.5
 
 * Repairs: the dialog no longer ends with a bare "The problem is fixed!". If the reported entities exist again, it now says which instance it was about and that there was nothing to repair; entities that exist but are only "unavailable" are listed (this is not a missing entity).
