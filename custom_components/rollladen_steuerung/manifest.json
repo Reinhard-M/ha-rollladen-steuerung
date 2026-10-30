@@ -17,5 +17,5 @@
   "iot_class": "calculated",
   "issue_tracker": "https://github.com/Reinhard-M/ha-rollladen-steuerung/issues",
   "requirements": [],
-  "version": "1.10.5"
+  "version": "1.10.6"
 }

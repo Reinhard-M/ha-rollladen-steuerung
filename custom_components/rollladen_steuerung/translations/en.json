@@ -321,7 +321,7 @@
         "step": {
           "init": {
             "title": "Replace missing entities – {title}",
-            "description": "The configuration points to entities that do not exist (anymore), e.g. after an entity ID was changed:\n{entities}\n\nPlease select the correct entity. A field left empty removes the input from the configuration.",
+            "description": "The configuration points to entities that cannot be used (missing or disabled, e.g. because the device or integration was switched off or an entity ID was changed):\n{entities}\n\nPlease select the correct entity. A field left empty removes the input from the configuration.",
             "data": {
               "cover": "Shutter (cover)",
               "day_entity": "Day or day/night (binary sensor or sensor)",
@@ -340,8 +340,8 @@
             }
           },
           "done": {
-            "title": "Rollladen Steuerung \"{title}\": repaired",
-            "description": "The configuration of the instance \"{title}\" of the Rollladen Steuerung integration was changed:\n{changes}\n\nSelect \"Submit\" to close this notice."
+            "title": "Rollladen Steuerung \"{title}\": result",
+            "description": "Result for the instance \"{title}\" of the Rollladen Steuerung integration:\n{changes}\n\n{hint}\n\nSelect \"Submit\" to close this notice."
           }
         },
         "abort": {

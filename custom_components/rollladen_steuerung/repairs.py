@@ -14,6 +14,8 @@ from homeassistant.helpers.selector import EntitySelector, EntitySelectorConfig
 
 from .config_flow import DAY_DOMAINS, OPTIONAL_ENTITIES
 from .const import CONF_COVER, CONF_DAY, CONF_DAYNIGHT
+from homeassistant.helpers import entity_registry as er
+
 from .entity_refs import async_update_issue, missing, referenced
 
 DOMAINS: dict[str, list[str]] = {
@@ -30,6 +32,18 @@ class MissingEntitiesFlow(RepairsFlow):
     def __init__(self, entry_id: str) -> None:
         self.entry_id = entry_id
         self._summary = ""
+        self._hint = ""
+
+    def _de(self) -> bool:
+        return str(self.hass.config.language).startswith("de")
+
+    def _reason(self, entity_id: str) -> str:
+        """Why an entity counts as missing: not existing or disabled (device/integration off)."""
+        de = self._de()
+        entry = er.async_get(self.hass).async_get(entity_id)
+        if entry is not None and entry.disabled_by is not None:
+            return "deaktiviert (Gerät bzw. Integration abgeschaltet)" if de else "disabled (device or integration switched off)"
+        return "existiert nicht" if de else "does not exist"
 
     def _unavailable(self, options: dict[str, Any]) -> str:
         """Referenced entities that exist but currently report 'unavailable'."""
@@ -54,6 +68,7 @@ class MissingEntitiesFlow(RepairsFlow):
             description_placeholders={
                 "title": entry.title if entry else "",
                 "changes": self._summary,
+                "hint": self._hint,
                 "unavailable": self._unavailable(dict(entry.options)) if entry else "",
             },
         )
@@ -82,11 +97,36 @@ class MissingEntitiesFlow(RepairsFlow):
                     options.pop(key, None)  # left empty = input no longer used
             self.hass.config_entries.async_update_entry(entry, options=options)
             async_update_issue(self.hass, entry)
-            replaced = [
-                f"- {gone[key]} → {options[key]}" if options.get(key) else f"- {gone[key]} → (entfernt / removed)"
-                for key in gone
-            ]
-            self._summary = "\n".join(replaced)
+            de = self._de()
+            lines: list[str] = []
+            unchanged = False
+            for key, old in gone.items():
+                new = options.get(key)
+                if not new:
+                    lines.append(f"- {old} → " + ("(entfernt)" if de else "(removed)"))
+                elif new == old:
+                    unchanged = True
+                    lines.append(
+                        f"- {old}: "
+                        + ("unverändert, weiterhin " if de else "unchanged, still ")
+                        + self._reason(old)
+                    )
+                else:
+                    lines.append(f"- {old} → {new}")
+            self._summary = "\n".join(lines)
+            self._hint = (
+                (
+                    "Hinweis: Mindestens eine Entität ist unverändert geblieben und kann die Instanz nicht "
+                    "steuern. Aktiviere sie unter Einstellungen → Geräte & Dienste → Entitäten (bzw. schalte "
+                    "das Gerät wieder ein) oder wähle eine andere Entität. Die Meldung bleibt so lange bestehen."
+                    if de
+                    else "Note: at least one entity was left unchanged and cannot be used by the instance. "
+                    "Enable it under Settings → Devices & services → Entities (or switch the device back on) "
+                    "or pick another entity. The notice stays until this is resolved."
+                )
+                if unchanged
+                else ""
+            )
             return await self.async_step_done()
 
         fields: dict[Any, Any] = {}
@@ -98,7 +138,7 @@ class MissingEntitiesFlow(RepairsFlow):
             data_schema=vol.Schema(fields),
             description_placeholders={
                 "title": entry.title,
-                "entities": "\n".join(f"- {eid}" for eid in gone.values()),
+                "entities": "\n".join(f"- {eid} ({self._reason(eid)})" for eid in gone.values()),
             },
         )
 
