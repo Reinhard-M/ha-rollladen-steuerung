@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.10.7
+
+* The drive times shown in the card (and in the input sensors "Drive time morning/evening") now include the *automatic drive delay*, so they show when the shutter really starts moving. The time of the schedule itself stays available in the attribute `rohwert`.
+
 ## 1.10.6
 
 * Repairs: the dialog now says why an entity counts as missing ("does not exist" or "disabled (device or integration switched off)").

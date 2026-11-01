@@ -713,3 +713,19 @@ async def test_start_lock_timeout(hass, freezer):
     await task
     await hass.async_block_till_done()
     assert len(e.stop) == 1
+
+
+async def test_displayed_drive_times_include_auto_delay(hass, freezer):
+    hass.states.async_set("sensor.morgens", "07:30:00")
+    hass.states.async_set("sensor.abends", "17:17")
+    e = await setup(hass, freezer, morning_entity="sensor.morgens", evening_entity="sensor.abends")
+    assert e.c.input_value("input_morning") == "07:30:00"  # no delay: unchanged
+    e.c.settings["auto_delay"] = 90
+    assert e.c.input_value("input_morning") == "07:31:30"
+    assert e.c.input_value("input_evening") == "17:18"  # without seconds stays without seconds
+    hass.states.async_set("sensor.abends", "23:59:30")
+    assert e.c.input_value("input_evening") == "00:01:00"  # over midnight
+    hass.states.async_set("sensor.morgens", "2026-11-02T07:30:00+01:00")
+    assert e.c.input_value("input_morning") == "2026-11-02T07:31:30+01:00"
+    hass.states.async_set("sensor.morgens", "unavailable")
+    assert e.c.input_value("input_morning") is None  # unavailable = no value (as before)

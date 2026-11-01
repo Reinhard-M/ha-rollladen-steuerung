@@ -22,6 +22,7 @@ import asyncio
 import logging
 import re
 from collections import deque
+from datetime import timedelta
 from typing import Any, Callable
 
 from homeassistant.config_entries import ConfigEntry
@@ -1304,6 +1305,26 @@ class Controller:
         text = "; ".join(parts) if parts else "keine"
         return text, (dt_util.utc_from_timestamp(due).isoformat() if due else None)
 
+    def _with_auto_delay(self, value: str) -> str:
+        """Drive time as shown: the time of the schedule plus the *automatic drive delay*.
+
+        Accepts "HH:MM[:SS]" and ISO date-times; anything else (unknown, unavailable, text) is
+        returned unchanged. The raw value of the schedule stays in the attribute ``rohwert``.
+        """
+        delay = round(float(self.settings["auto_delay"]))
+        if delay <= 0 or value in (STATE_UNKNOWN, STATE_UNAVAILABLE):
+            return value
+        m = re.fullmatch(r"(\d{1,2}):(\d{2})(?::(\d{2}))?", value)
+        if m:
+            secs = int(m[1]) * 3600 + int(m[2]) * 60 + int(m[3] or 0)
+            secs = (secs + delay) % 86400
+            out = f"{secs // 3600:02d}:{secs % 3600 // 60:02d}"
+            return f"{out}:{secs % 60:02d}" if m[3] is not None else out
+        parsed = dt_util.parse_datetime(value)
+        if parsed is not None:
+            return (parsed + timedelta(seconds=delay)).isoformat()
+        return value
+
     def input_value(self, key: str):
         """Current value of an input as read by the controller (None = not available)."""
         o = self.opt
@@ -1325,5 +1346,5 @@ class Controller:
             return self._sun_value(o.get(CONF_AZIMUTH), "azimuth")
         if key in ("input_morning", "input_evening"):
             st = self._state(o.get(INPUT_SENSORS[key]))
-            return st.state if st else None
+            return self._with_auto_delay(st.state) if st else None
         return self._float(o.get(INPUT_SENSORS[key]))
