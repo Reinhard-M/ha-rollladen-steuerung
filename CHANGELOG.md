@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.10.8
+
+* Card: the drive times (morning/evening) are now HTML-escaped. A text sensor chosen as drive-time source can no longer inject markup into the dashboard.
+* README: new introduction; installation section moved in front of the setup and now leads with the Marketplace / HACS search (including the "Open Marketplace repository" button) and keeps the custom repository steps as a fallback.
+
 ## 1.10.7
 
 * The drive times shown in the card (and in the input sensors "Drive time morning/evening") now include the *automatic drive delay*, so they show when the shutter really starts moving. The time of the schedule itself stays available in the attribute `rohwert`.
