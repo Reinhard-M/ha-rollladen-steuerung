@@ -4,8 +4,8 @@
 
 ![Karte Rollladen Steuerung](docs/karte.png)
 
-Diese Integration soll eine einfache Steuerung für Rollos und Markisen zur Verfügung stellen. Es wird zwischen Tag und Nachtbetrieb unterschieden. Nachts gibt es keine Beschattungsfahrten, Tagsüber sind keine Nachtfahrten möglich. Automatische Fahrten werden zum gewählten Zeitpunkt unabhängig von vorheriger, manueller Bedienung durchgeführt. Nur in bestimmten Ausnahmefällen werden Fahrten nachgeholt.
-Die strikte Unterscheidung von Tag/Nacht gilt ebenfalls für Markisen, dort gibt es aber keine Nachtfahrten und die hoch/runter Logik der Tag/Nacht Steuerung ist invertiert: Mit eintritt der Nacht wird spätestens hoch gefahren, ab Eintritt des Tages kann runter gefahren werden. Weitere Details werden in der folgenden Beschreibung erklärt.
+Diese Integration soll eine einfache Steuerung für Rollos und Markisen zur Verfügung stellen. Es wird zwischen Tag- und Nachtbetrieb unterschieden. Nachts gibt es keine Beschattungsfahrten, tagsüber sind keine Nachtfahrten möglich. Automatische Fahrten werden zum gewählten Zeitpunkt unabhängig von vorheriger, manueller Bedienung durchgeführt. Nur in bestimmten Ausnahmefällen werden Fahrten nachgeholt.
+Die strikte Unterscheidung von Tag/Nacht gilt ebenfalls für Markisen, dort gibt es aber keine Nachtfahrten und die Hoch/Runter-Logik der Tag/Nacht-Steuerung ist invertiert: Mit Eintritt der Nacht wird spätestens hoch-/eingefahren, ab Eintritt des Tages kann runter-/ausgefahren werden. Weitere Details werden in der folgenden Beschreibung erklärt.
 
 Verbindet **Tag/Nacht** (z. B. aus „Rollladen Zeiten“), Sensoren und einen Fensterkontakt mit einem **cover**-Rollo.
 Eine Instanz je Rollo (Einstellungen → Geräte & Dienste → „Rollladen Steuerung“ hinzufügen). Beim Anlegen werden nur Rollo und Eingangsentitäten gewählt, **alle Werte sind danach Entitäten des Geräts** (bleiben nach Neustart erhalten). Position: 0 % = zu, 100 % = offen (wie in HA).
