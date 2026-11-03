@@ -4,7 +4,7 @@
 
 ![Rollladen Steuerung card](docs/karte.png)
 
-Connects **day/night** (e.g. from "Rollladen Zeiten"), sensors and a window contact with a **cover** shutter/blind.
+Connects **day/night** (e.g. from ["Rollladen Zeiten"](https://github.com/Reinhard-M/ha-rollladen-zeiten)), sensors and a window contact with a **cover** shutter/blind.
 One instance per shutter (Settings → Devices & services → add "Rollladen Steuerung"). When adding an instance you only choose the shutter and its input entities; **all values are entities of the device afterwards** and survive a restart. Position: 0 % = closed, 100 % = open (as in HA).
 
 > Note: entity names and the card are currently localized in German and English; the automation texts in diagnostic sensors (e.g. "Fahrt verzögert") are German.
@@ -25,7 +25,7 @@ Only *shutter* and *day or day/night* are **mandatory**. Everything else is **op
 | Sun elevation / azimuth | optional | Sensors or `sun.sun` (attributes); not selected = condition skipped |
 | External command | optional | Sensor whose state is executed as a command; every state change triggers it. All commands: see section *External command* |
 | External block | optional | **Binary** input (`binary_sensor`, `input_boolean`, `switch`, sensor): `on`/`true` blocks the automation, `off`/`false` releases it. See section *Blocking the automation* |
-| Drive time morning/evening | optional | Display only, in the card: sensor with a time (e.g. "Rollladen Zeiten") |
+| Drive time morning/evening | optional | Display only, in the card: sensor with a time (e.g. ["Rollladen Zeiten"](https://github.com/Reinhard-M/ha-rollladen-zeiten)) |
 | MyPosition button on the device | optional | Button/switch/script that moves the motor to its MyPosition (intermediate position). **Empty = no *MyPosition* button and no *MyPosition* choice in the settings** |
 | Homematic device / channel | optional | See section *Blinds and slats* |
 
