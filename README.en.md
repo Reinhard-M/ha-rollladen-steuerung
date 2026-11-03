@@ -9,6 +9,29 @@ One instance per shutter (Settings → Devices & services → add "Rollladen Ste
 
 > Note: entity names and the card are currently localized in German and English; the automation texts in diagnostic sensors (e.g. "Fahrt verzögert") are German.
 
+## Installation
+
+### Via the Marketplace / HACS (recommended)
+
+**Home Assistant 2026.11 or newer:** HACS is built in as the **Marketplace**.
+
+1. Open **Settings → Marketplace** and search for "Rollladen Steuerung".
+2. Install it and set it up (Settings → Devices & services → Add integration → "Rollladen Steuerung"). If a restart is needed, Home Assistant tells you.
+
+[![Open your Home Assistant instance and open a repository in the Marketplace.](https://my.home-assistant.io/badges/marketplace_repository.svg)](https://my.home-assistant.io/redirect/marketplace_repository/?owner=Reinhard-M&repository=ha-rollladen-steuerung&category=integration)
+
+**Older Home Assistant versions with HACS:**
+
+1. Open HACS and search for "Rollladen Steuerung".
+2. Click **Download**, then **restart** Home Assistant.
+3. Settings → Devices & services → Add integration → "Rollladen Steuerung".
+
+If the integration does not show up in the search, add it as a custom repository (`https://github.com/Reinhard-M/ha-rollladen-steuerung`, category **Integration**): in the Marketplace via **Add from link** (top right) or menu (⋮) → **Custom repositories**, in HACS via menu (⋮) → **Custom repositories**.
+
+### Manual
+
+Copy the folder `custom_components/rollladen_steuerung` from this repository to `/config/custom_components/` and **restart** Home Assistant.
+
 ## Setup (inputs when adding the instance)
 
 Only *shutter* and *day or day/night* are **mandatory**. Everything else is **optional**; what is missing is simply not evaluated (e.g. no brightness sensor = the brightness condition of shading is skipped) and the related entities/columns do not appear.
@@ -176,29 +199,6 @@ info_azimuth: sun.sun
 ```
 
 The card operates the entities *Position* and *Slats* (number, shows the actual value, setting drives the shutter) and the buttons. Manual drives do not influence the automation.
-
-## Installation
-
-### Via the Marketplace / HACS (recommended)
-
-[![Open your Home Assistant instance and open a repository in the Marketplace.](https://my.home-assistant.io/badges/marketplace_repository.svg)](https://my.home-assistant.io/redirect/marketplace_repository/?owner=Reinhard-M&repository=ha-rollladen-steuerung&category=integration)
-
-**Home Assistant 2026.11 or newer:** HACS is built in as the **Marketplace**.
-
-1. Open **Settings → Marketplace** and search for "Rollladen Steuerung".
-2. Install it and set it up (Settings → Devices & services → Add integration → "Rollladen Steuerung"). If a restart is needed, Home Assistant tells you.
-
-**Older Home Assistant versions with HACS:**
-
-1. Open HACS and search for "Rollladen Steuerung".
-2. Click **Download**, then **restart** Home Assistant.
-3. Settings → Devices & services → Add integration → "Rollladen Steuerung".
-
-If the integration does not show up in the search, add it as a custom repository (`https://github.com/Reinhard-M/ha-rollladen-steuerung`, category **Integration**): in the Marketplace via **Add from link** (top right) or menu (⋮) → **Custom repositories**, in HACS via menu (⋮) → **Custom repositories**.
-
-### Manual
-
-Copy the folder `custom_components/rollladen_steuerung` from this repository to `/config/custom_components/` and **restart** Home Assistant.
 
 ## Help
 

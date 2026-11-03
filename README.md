@@ -10,6 +10,29 @@ Die strikte Unterscheidung von Tag/Nacht gilt ebenfalls für Markisen, dort gibt
 Verbindet **Tag/Nacht** (z. B. aus [„Rollladen Zeiten“](https://github.com/Reinhard-M/ha-rollladen-zeiten)), Sensoren und einen Fensterkontakt mit einem **cover**-Rollo.
 Eine Instanz je Rollo (Einstellungen → Geräte & Dienste → „Rollladen Steuerung“ hinzufügen). Beim Anlegen werden nur Rollo und Eingangsentitäten gewählt, **alle Werte sind danach Entitäten des Geräts** (bleiben nach Neustart erhalten). Position: 0 % = zu, 100 % = offen (wie in HA).
 
+## Installation
+
+### Über den Marketplace / HACS (empfohlen)
+
+**Home Assistant 2026.11 oder neuer:** HACS ist als **Marketplace** fest eingebaut.
+
+1. **Einstellungen → Marketplace** öffnen und nach „Rollladen Steuerung“ suchen.
+2. Installieren und einrichten (Einstellungen → Geräte & Dienste → Integration hinzufügen → „Rollladen Steuerung“). Ist ein Neustart nötig, meldet sich Home Assistant.
+
+[![Öffne deine Home-Assistant-Instanz und zeige ein Repository im Marketplace.](https://my.home-assistant.io/badges/marketplace_repository.svg)](https://my.home-assistant.io/redirect/marketplace_repository/?owner=Reinhard-M&repository=ha-rollladen-steuerung&category=integration)
+
+**Ältere Home-Assistant-Versionen mit HACS:**
+
+1. HACS öffnen und nach „Rollladen Steuerung“ suchen.
+2. **Herunterladen** anklicken, Home Assistant **neu starten**.
+3. Einstellungen → Geräte & Dienste → Integration hinzufügen → „Rollladen Steuerung“.
+
+Taucht die Integration in der Suche nicht auf, füge sie als benutzerdefiniertes Repository hinzu (`https://github.com/Reinhard-M/ha-rollladen-steuerung`, Kategorie **Integration**): im Marketplace über **Über Link hinzufügen** (oben rechts) oder Menü (⋮) → **Benutzerdefinierte Repositorys**, in HACS über Menü (⋮) → **Benutzerdefinierte Repositories**.
+
+### Manuell
+
+Ordner `custom_components/rollladen_steuerung` aus diesem Repository nach `/config/custom_components/` kopieren, Home Assistant **neu starten**.
+
 ## Einrichtung (Eingänge beim Anlegen der Instanz)
 
 **Pflicht** sind nur *Rollo* und *Tag bzw. Tag/Nacht*. Alles andere ist **optional**; was fehlt, wird einfach nicht ausgewertet (z. B. kein Helligkeitssensor = die Helligkeitsbedingung der Beschattung entfällt) und die zugehörigen Entitäten/Spalten erscheinen nicht.
@@ -177,29 +200,6 @@ info_azimuth: sun.sun
 ```
 
 Die Karte bedient die Entitäten *Position* und *Lamellen* (Zahl, zeigt den Ist-Wert, Setzen fährt das Rollo) sowie die Taster. Manuelle Fahrten beeinflussen die Automatik nicht.
-
-## Installation
-
-### Über den Marketplace / HACS (empfohlen)
-
-[![Öffne deine Home-Assistant-Instanz und zeige ein Repository im Marketplace.](https://my.home-assistant.io/badges/marketplace_repository.svg)](https://my.home-assistant.io/redirect/marketplace_repository/?owner=Reinhard-M&repository=ha-rollladen-steuerung&category=integration)
-
-**Home Assistant 2026.11 oder neuer:** HACS ist als **Marketplace** fest eingebaut.
-
-1. **Einstellungen → Marketplace** öffnen und nach „Rollladen Steuerung“ suchen.
-2. Installieren und einrichten (Einstellungen → Geräte & Dienste → Integration hinzufügen → „Rollladen Steuerung“). Ist ein Neustart nötig, meldet sich Home Assistant.
-
-**Ältere Home-Assistant-Versionen mit HACS:**
-
-1. HACS öffnen und nach „Rollladen Steuerung“ suchen.
-2. **Herunterladen** anklicken, Home Assistant **neu starten**.
-3. Einstellungen → Geräte & Dienste → Integration hinzufügen → „Rollladen Steuerung“.
-
-Taucht die Integration in der Suche nicht auf, füge sie als benutzerdefiniertes Repository hinzu (`https://github.com/Reinhard-M/ha-rollladen-steuerung`, Kategorie **Integration**): im Marketplace über **Über Link hinzufügen** (oben rechts) oder Menü (⋮) → **Benutzerdefinierte Repositorys**, in HACS über Menü (⋮) → **Benutzerdefinierte Repositories**.
-
-### Manuell
-
-Ordner `custom_components/rollladen_steuerung` aus diesem Repository nach `/config/custom_components/` kopieren, Home Assistant **neu starten**.
 
 ## Hilfe
 
