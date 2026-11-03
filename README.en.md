@@ -4,6 +4,9 @@
 
 ![Rollladen Steuerung card](docs/karte.png)
 
+This integration is meant to provide a simple control for shutters, blinds and awnings. It distinguishes between day and night operation. At night there are no shading drives, during the day no night drives are possible. Automatic drives are carried out at the selected time regardless of earlier manual operation. Only in certain exceptional cases are drives made up for later.
+The strict day/night distinction also applies to awnings, but they have no night drives, and the up/down logic of the day/night control is inverted: at the latest when night begins they are raised/retracted, and from the start of the day they may be lowered/extended. Further details are explained in the following description.
+
 Connects **day/night** (e.g. from ["Rollladen Zeiten"](https://github.com/Reinhard-M/ha-rollladen-zeiten)), sensors and a window contact with a **cover** shutter/blind.
 One instance per shutter (Settings → Devices & services → add "Rollladen Steuerung"). When adding an instance you only choose the shutter and its input entities; **all values are entities of the device afterwards** and survive a restart. Position: 0 % = closed, 100 % = open (as in HA).
 
