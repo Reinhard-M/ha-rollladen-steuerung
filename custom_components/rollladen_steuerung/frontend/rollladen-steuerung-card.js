@@ -396,7 +396,7 @@ class RollladenSteuerungCard extends HTMLElement {
       return `<tr>
         <th><a class="dev" data-device="${esc(id)}" href="/config/devices/device/${esc(id)}">${esc(this._name(id))}</a></th>
         <td class="st g" title="${esc(tip)}">${this._statusIcon(pos, phase, contact, moving, this._st(id, "state")?.attributes?.device_type)}</td>
-        ${hasTimes ? `<td class="t g">${this._time(id, "input_morning")}</td><td class="t g">${this._time(id, "input_evening")}</td>` : ""}
+        ${hasTimes ? `<td class="t g">${esc(this._time(id, "input_morning"))}</td><td class="t g">${esc(this._time(id, "input_evening"))}</td>` : ""}
         <td class="h g">${map.target_position ? `<select class="sel" data-set="${esc(map.target_position)}" title="${t.height}">${this._options(pos)}</select>` : ""}</td>
         ${btn("button_up", "b g")}${btn("button_stop")}${btn("button_down")}${btn("button_back")}${last}${state}
       </tr>`;

@@ -181,6 +181,12 @@ The card operates the entities *Position* and *Slats* (number, shows the actual 
 
 ### Via HACS (recommended)
 
+1. Open HACS and search for "Rollladen Steuerung".
+2. Click **Download**, then **restart** Home Assistant.
+3. Settings → Devices & services → Add integration → "Rollladen Steuerung".
+
+If the integration does not show up in the HACS search, add it as a custom repository:
+
 1. Open HACS → menu (⋮) → **Custom repositories**.
 2. Add `https://github.com/Reinhard-M/ha-rollladen-steuerung` with category **Integration**.
 3. Search for "Rollladen Steuerung" in HACS, **Download**, then **restart** Home Assistant.
