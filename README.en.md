@@ -181,6 +181,8 @@ The card operates the entities *Position* and *Slats* (number, shows the actual 
 
 ### Via the Marketplace / HACS (recommended)
 
+[![Open your Home Assistant instance and open a repository in the Marketplace.](https://my.home-assistant.io/badges/marketplace_repository.svg)](https://my.home-assistant.io/redirect/marketplace_repository/?owner=Reinhard-M&repository=ha-rollladen-steuerung&category=integration)
+
 **Home Assistant 2026.11 or newer:** HACS is built in as the **Marketplace**.
 
 1. Open **Settings → Marketplace** and search for "Rollladen Steuerung".
