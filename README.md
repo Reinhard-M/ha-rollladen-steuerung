@@ -177,18 +177,20 @@ Die Karte bedient die Entitäten *Position* und *Lamellen* (Zahl, zeigt den Ist-
 
 ## Installation
 
-### Über HACS (empfohlen)
+### Über den Marketplace / HACS (empfohlen)
+
+**Home Assistant 2026.11 oder neuer:** HACS ist als **Marketplace** fest eingebaut.
+
+1. **Einstellungen → Marketplace** öffnen und nach „Rollladen Steuerung“ suchen.
+2. Installieren und einrichten (Einstellungen → Geräte & Dienste → Integration hinzufügen → „Rollladen Steuerung“). Ist ein Neustart nötig, meldet sich Home Assistant.
+
+**Ältere Home-Assistant-Versionen mit HACS:**
 
 1. HACS öffnen und nach „Rollladen Steuerung“ suchen.
 2. **Herunterladen** anklicken, Home Assistant **neu starten**.
 3. Einstellungen → Geräte & Dienste → Integration hinzufügen → „Rollladen Steuerung“.
 
-Taucht die Integration in der HACS-Suche nicht auf, füge sie als benutzerdefiniertes Repository hinzu:
-
-1. HACS öffnen → Menü (⋮) → **Benutzerdefinierte Repositories**.
-2. Repository `https://github.com/Reinhard-M/ha-rollladen-steuerung` eintragen, Kategorie **Integration**, hinzufügen.
-3. „Rollladen Steuerung“ in HACS suchen, **Herunterladen**, Home Assistant **neu starten**.
-4. Einstellungen → Geräte & Dienste → Integration hinzufügen → „Rollladen Steuerung“.
+Taucht die Integration in der Suche nicht auf, füge sie als benutzerdefiniertes Repository hinzu (`https://github.com/Reinhard-M/ha-rollladen-steuerung`, Kategorie **Integration**): im Marketplace über **Hinzufügen per Link** (dafür ist eine GitHub-Verbindung nötig), in HACS über Menü (⋮) → **Benutzerdefinierte Repositories**.
 
 ### Manuell
 
