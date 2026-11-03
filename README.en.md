@@ -4,7 +4,7 @@
 
 ![Rollladen Steuerung card](docs/karte.png)
 
-Connects **day/night** (e.g. from "Rollladen Zeiten"), sensors and a window contact with a **cover** shutter/blind.
+Connects **day/night** (e.g. from ["Rollladen Zeiten"](https://github.com/Reinhard-M/ha-rollladen-zeiten)), sensors and a window contact with a **cover** shutter/blind.
 One instance per shutter (Settings → Devices & services → add "Rollladen Steuerung"). When adding an instance you only choose the shutter and its input entities; **all values are entities of the device afterwards** and survive a restart. Position: 0 % = closed, 100 % = open (as in HA).
 
 > Note: entity names and the card are currently localized in German and English; the automation texts in diagnostic sensors (e.g. "Fahrt verzögert") are German.
@@ -25,7 +25,7 @@ Only *shutter* and *day or day/night* are **mandatory**. Everything else is **op
 | Sun elevation / azimuth | optional | Sensors or `sun.sun` (attributes); not selected = condition skipped |
 | External command | optional | Sensor whose state is executed as a command; every state change triggers it. All commands: see section *External command* |
 | External block | optional | **Binary** input (`binary_sensor`, `input_boolean`, `switch`, sensor): `on`/`true` blocks the automation, `off`/`false` releases it. See section *Blocking the automation* |
-| Drive time morning/evening | optional | Display only, in the card: sensor with a time (e.g. "Rollladen Zeiten") |
+| Drive time morning/evening | optional | Display only, in the card: sensor with a time (e.g. ["Rollladen Zeiten"](https://github.com/Reinhard-M/ha-rollladen-zeiten)) |
 | MyPosition button on the device | optional | Button/switch/script that moves the motor to its MyPosition (intermediate position). **Empty = no *MyPosition* button and no *MyPosition* choice in the settings** |
 | Homematic device / channel | optional | See section *Blinds and slats* |
 
@@ -179,12 +179,22 @@ The card operates the entities *Position* and *Slats* (number, shows the actual 
 
 ## Installation
 
-### Via HACS (recommended)
+### Via the Marketplace / HACS (recommended)
 
-1. Open HACS → menu (⋮) → **Custom repositories**.
-2. Add `https://github.com/Reinhard-M/ha-rollladen-steuerung` with category **Integration**.
-3. Search for "Rollladen Steuerung" in HACS, **Download**, then **restart** Home Assistant.
-4. Settings → Devices & services → Add integration → "Rollladen Steuerung".
+[![Open your Home Assistant instance and open a repository in the Marketplace.](https://my.home-assistant.io/badges/marketplace_repository.svg)](https://my.home-assistant.io/redirect/marketplace_repository/?owner=Reinhard-M&repository=ha-rollladen-steuerung&category=integration)
+
+**Home Assistant 2026.11 or newer:** HACS is built in as the **Marketplace**.
+
+1. Open **Settings → Marketplace** and search for "Rollladen Steuerung".
+2. Install it and set it up (Settings → Devices & services → Add integration → "Rollladen Steuerung"). If a restart is needed, Home Assistant tells you.
+
+**Older Home Assistant versions with HACS:**
+
+1. Open HACS and search for "Rollladen Steuerung".
+2. Click **Download**, then **restart** Home Assistant.
+3. Settings → Devices & services → Add integration → "Rollladen Steuerung".
+
+If the integration does not show up in the search, add it as a custom repository (`https://github.com/Reinhard-M/ha-rollladen-steuerung`, category **Integration**): in the Marketplace via **Add from link** (top right) or menu (⋮) → **Custom repositories**, in HACS via menu (⋮) → **Custom repositories**.
 
 ### Manual
 

@@ -4,7 +4,10 @@
 
 ![Karte Rollladen Steuerung](docs/karte.png)
 
-Verbindet **Tag/Nacht** (z. B. aus „Rollladen Zeiten“), Sensoren und einen Fensterkontakt mit einem **cover**-Rollo.
+Diese Integration soll eine einfache Steuerung für Rollos und Markisen zur Verfügung stellen. Es wird zwischen Tag- und Nachtbetrieb unterschieden. Nachts gibt es keine Beschattungsfahrten, tagsüber sind keine Nachtfahrten möglich. Automatische Fahrten werden zum gewählten Zeitpunkt unabhängig von vorheriger, manueller Bedienung durchgeführt. Nur in bestimmten Ausnahmefällen werden Fahrten nachgeholt.
+Die strikte Unterscheidung von Tag/Nacht gilt ebenfalls für Markisen, dort gibt es aber keine Nachtfahrten und die Hoch/Runter-Logik der Tag/Nacht-Steuerung ist invertiert: Mit Eintritt der Nacht wird spätestens hoch-/eingefahren, ab Eintritt des Tages kann runter-/ausgefahren werden. Weitere Details werden in der folgenden Beschreibung erklärt.
+
+Verbindet **Tag/Nacht** (z. B. aus [„Rollladen Zeiten“](https://github.com/Reinhard-M/ha-rollladen-zeiten)), Sensoren und einen Fensterkontakt mit einem **cover**-Rollo.
 Eine Instanz je Rollo (Einstellungen → Geräte & Dienste → „Rollladen Steuerung“ hinzufügen). Beim Anlegen werden nur Rollo und Eingangsentitäten gewählt, **alle Werte sind danach Entitäten des Geräts** (bleiben nach Neustart erhalten). Position: 0 % = zu, 100 % = offen (wie in HA).
 
 ## Einrichtung (Eingänge beim Anlegen der Instanz)
@@ -23,7 +26,7 @@ Eine Instanz je Rollo (Einstellungen → Geräte & Dienste → „Rollladen Steu
 | Sonne Elevation / Azimut | optional | Sensoren oder `sun.sun` (Attribute); nicht gewählt = Bedingung entfällt |
 | Externes Kommando | optional | Sensor, dessen Zustand als Kommando ausgeführt wird; jede Zustandsänderung löst es aus. Alle Kommandos siehe Abschnitt *Externes Kommando* |
 | Extern blockieren | optional | **Binärer** Eingang (`binary_sensor`, `input_boolean`, `switch`, Sensor): `on`/`true` sperrt die Automatik, `off`/`false` gibt sie frei. Siehe Abschnitt *Automatik sperren* |
-| Fahrzeit morgens/abends | optional | Nur Anzeige in der Karte: Sensor mit Uhrzeit (z. B. „Rollladen Zeiten“) |
+| Fahrzeit morgens/abends | optional | Nur Anzeige in der Karte: Sensor mit Uhrzeit (z. B. [„Rollladen Zeiten“](https://github.com/Reinhard-M/ha-rollladen-zeiten)) |
 | MyPosition-Taster am Gerät | optional | Button/Schalter/Skript, das die MyPosition (Zwischenstellung) des Motors anfährt. **Leer = kein Taster *MyPosition* und keine Auswahl *MyPosition* in den Einstellungen** |
 | Homematic-Gerät / Kanal | optional | Siehe Abschnitt *Jalousien und Lamellen* |
 
@@ -177,12 +180,22 @@ Die Karte bedient die Entitäten *Position* und *Lamellen* (Zahl, zeigt den Ist-
 
 ## Installation
 
-### Über HACS (empfohlen)
+### Über den Marketplace / HACS (empfohlen)
 
-1. HACS öffnen → Menü (⋮) → **Benutzerdefinierte Repositories**.
-2. Repository `https://github.com/Reinhard-M/ha-rollladen-steuerung` eintragen, Kategorie **Integration**, hinzufügen.
-3. „Rollladen Steuerung“ in HACS suchen, **Herunterladen**, Home Assistant **neu starten**.
-4. Einstellungen → Geräte & Dienste → Integration hinzufügen → „Rollladen Steuerung“.
+[![Öffne deine Home-Assistant-Instanz und zeige ein Repository im Marketplace.](https://my.home-assistant.io/badges/marketplace_repository.svg)](https://my.home-assistant.io/redirect/marketplace_repository/?owner=Reinhard-M&repository=ha-rollladen-steuerung&category=integration)
+
+**Home Assistant 2026.11 oder neuer:** HACS ist als **Marketplace** fest eingebaut.
+
+1. **Einstellungen → Marketplace** öffnen und nach „Rollladen Steuerung“ suchen.
+2. Installieren und einrichten (Einstellungen → Geräte & Dienste → Integration hinzufügen → „Rollladen Steuerung“). Ist ein Neustart nötig, meldet sich Home Assistant.
+
+**Ältere Home-Assistant-Versionen mit HACS:**
+
+1. HACS öffnen und nach „Rollladen Steuerung“ suchen.
+2. **Herunterladen** anklicken, Home Assistant **neu starten**.
+3. Einstellungen → Geräte & Dienste → Integration hinzufügen → „Rollladen Steuerung“.
+
+Taucht die Integration in der Suche nicht auf, füge sie als benutzerdefiniertes Repository hinzu (`https://github.com/Reinhard-M/ha-rollladen-steuerung`, Kategorie **Integration**): im Marketplace über **Über Link hinzufügen** (oben rechts) oder Menü (⋮) → **Benutzerdefinierte Repositorys**, in HACS über Menü (⋮) → **Benutzerdefinierte Repositories**.
 
 ### Manuell
 
