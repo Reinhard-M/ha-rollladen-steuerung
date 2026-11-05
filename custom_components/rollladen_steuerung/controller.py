@@ -684,7 +684,9 @@ class Controller:
             else:
                 self._schedule_catchup()
         elif self.is_day is False:
-            await self._apply_auto()  # night: height matching the contact
+            # night: height matching the contact. A window change is quasi manual and never
+            # simultaneous with other shutters, so the automatic drive delay is skipped.
+            await self._apply_auto(delayed=False)
         # Day: window contacts have no effect
         self.notify()
 
@@ -710,7 +712,8 @@ class Controller:
             return
         self._reason = "Nachholen"
         self.blocked = False
-        await self._apply_auto()
+        # Caused by a contact change and already waited for the catch-up delay: no extra drive delay
+        await self._apply_auto(delayed=False)
         self.notify()
 
     # ------------------------------------------------------------------ Automatic drives
@@ -749,8 +752,12 @@ class Controller:
             self._auto_cancel()
             self._auto_cancel = None
 
-    async def _apply_auto(self, target: dict[str, Any] | None = None) -> None:
-        """Automatic drive, delayed by *automatic drive delay* (automation only, never manual)."""
+    async def _apply_auto(self, target: dict[str, Any] | None = None, *, delayed: bool = True) -> None:
+        """Automatic drive, delayed by *automatic drive delay* (automation only, never manual).
+
+        ``delayed=False`` skips the drive delay for drives caused by a window contact change:
+        those are quasi manual and not simultaneous with other shutters.
+        """
         t = target or self._target_now()
         if t is None:
             return
@@ -768,7 +775,7 @@ class Controller:
         self.blocked = False
         delay = float(self.settings["auto_delay"])
         self._cancel_auto_timer()  # a new target replaces one that is still waiting
-        if delay <= 0:
+        if delay <= 0 or not delayed:
             await self._drive_target(t)
             self.notify()
             return

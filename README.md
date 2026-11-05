@@ -70,7 +70,7 @@ Alle Werte sind Entitäten des Geräts und bleiben nach einem Neustart erhalten.
 | Beschattung Ende-Verzögerung | 300 s | So lange muss eine Bedingung verletzt sein, bevor die Beschattung endet |
 | Beschattung Ende | vorherige Position | Danach auf vorherige Position oder Tagesposition |
 | Nachhol-Verzögerung | 30 s | Wartezeit, bevor eine vom Aussperrschutz zurückgehaltene Fahrt nachgeholt wird |
-| **Fahrverzögerung automatisch** | 0 s (aus) | Verzögert jede **automatische** Fahrt (siehe Logik); manuelle nie |
+| **Fahrverzögerung automatisch** | 0 s (aus) | Verzögert zeitgesteuerte automatische Fahrten (siehe Logik); manuelle und durch den Fensterkontakt ausgelöste nie |
 | Lamellen Nacht (offen/geschlossen/gekippt) / Beschattung / Tag | 100 / 0 / 50 / 50 / 100 % | nur mit *Lamellen verwenden* |
 | Laufzeit runter / hoch | 30 s | nur bei Positionsquelle *Intern*; Kalibrierung möglich |
 | MyPosition Höhe | 50 % | nur bei *Intern* mit MyPosition-Taster; Kalibrierung möglich |
@@ -89,7 +89,7 @@ Alle Werte sind Entitäten des Geräts und bleiben nach einem Neustart erhalten.
 
 **Ende der Beschattung**: Ist **eine** Bedingung nicht mehr erfüllt (Helligkeit jetzt gegen den *Ende*-Wert), startet **ein** Timer (*Beschattung Ende-Verzögerung*). Sind wieder alle erfüllt, wird er zurückgesetzt. Läuft er ab, fährt das Rollo je nach *Beschattung Ende* auf die **vorherige Position** (vor der Beschattung; nach der Nacht = oben) oder auf die **Tagesposition** (*Beschattung Ende* = „Tagesposition“). Die Ziele werden dabei als Position angefahren.
 
-**Fahrverzögerung automatisch** (Zahl, Sekunden, Vorgabe 0 = aus): verzögert jede **automatisch** erzeugte Fahrt (Tag/Nacht, Beschattung, Nachholen) um diese Zeit. Sinnvoll, damit sich Befehle bei „alle Rollos runter“ nicht stören – pro Rollo unterschiedliche Werte einstellen (z. B. 0, 2, 4 s …). Manuelle Fahrten (Taster, Zurück, Positions-/Lamellenänderung, Externes Kommando) werden **nie** verzögert. Kommt während der Wartezeit ein neues Ziel, ersetzt es das wartende.
+**Fahrverzögerung automatisch** (Zahl, Sekunden, Vorgabe 0 = aus): verzögert jede **zeitgesteuerte** automatische Fahrt (Tag/Nacht, Beschattung) um diese Zeit. Sinnvoll, damit sich Befehle bei „alle Rollos runter“ nicht stören – pro Rollo unterschiedliche Werte einstellen (z. B. 0, 2, 4 s …). Manuelle Fahrten (Taster, Zurück, Positions-/Lamellenänderung, Externes Kommando) werden **nie** verzögert; ebenso Fahrten, die ein **Fensterkontakt** auslöst (Wechsel der Nachthöhe, Nachholen nach dem Aussperrschutz), denn sie sind praktisch manuell und treffen nicht mit anderen Rollos zusammen. Kommt während der Wartezeit ein neues Ziel, ersetzt es das wartende.
 
 **Markise** (Gerätetyp *Markise*): Die Steuerlogik ist dieselbe wie bei Rollos, also **100 % = eingefahren, 0 % = ausgefahren**. Das Tag/Nacht-Verhalten ist aber anders:
 
