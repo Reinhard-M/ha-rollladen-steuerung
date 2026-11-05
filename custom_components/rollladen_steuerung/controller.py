@@ -37,6 +37,8 @@ from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers import entity_registry as er
 from homeassistant.helpers.dispatcher import async_dispatcher_send
 from homeassistant.helpers.event import async_call_later, async_track_state_change_event
+from homeassistant.helpers.start import async_at_started
+from homeassistant.helpers.storage import Store
 from homeassistant.util import dt as dt_util
 
 from .const import (
@@ -95,6 +97,7 @@ from .const import (
     SELECTS,
     SHADE_MYPOS,
     SLAT_KEYS,
+    PENDING_MAX_AGE,
     START_WAIT_MAX,
     SWITCHES,
     TIME_KEYS,
@@ -244,6 +247,9 @@ class Controller:
         self._catchup_due: float | None = None
         self._auto_due: float | None = None
         self._auto_cancel: Callable[[], None] | None = None
+        # A waiting (delayed) automatic drive is stored, so it is not lost by a restart
+        self._pending_store: Store = Store(hass, 1, f"{DOMAIN}.pending_{entry.entry_id}")
+        self._pending_data: dict[str, Any] | None = None
         self._stop_target: float | None = None
         self._end_cancel: Callable[[], None] | None = None
         self._catchup_cancel: Callable[[], None] | None = None
@@ -455,6 +461,15 @@ class Controller:
         else:
             self._start_ready_wait()
         self.notify()  # show the switch state after taking over the input
+        pending = await self._pending_store.async_load()
+        if pending and pending.get("due") is not None:
+            self._save_pending(None)
+
+            @callback
+            def _started(_hass: HomeAssistant) -> None:
+                self.hass.async_create_task(self._resume_pending(pending))
+
+            async_at_started(self.hass, _started)
 
     def _deps_ready(self) -> bool:
         """Can commands be sent? HA running, cover available, Homematic service present if needed."""
@@ -507,6 +522,7 @@ class Controller:
     async def async_stop(self) -> None:
         self._stopped = True
         self._release_ready()  # release waiting commands; they are dropped (see _call)
+        await self._pending_store.async_save(self._pending_data or {})  # also on reload, not only at HA stop
         for unsub in self._unsubs:
             unsub()
         self._unsubs.clear()
@@ -743,7 +759,31 @@ class Controller:
         """Lock-out protection: only if the shutter is up and the contact reports "open"."""
         return self.lock_active and self.read_contact() == "open" and self._is_up()
 
+    def _save_pending(self, data: dict[str, Any] | None) -> None:
+        """Remember the waiting automatic drive (None = nothing waiting)."""
+        self._pending_data = data
+        self._pending_store.async_delay_save(lambda: self._pending_data or {}, 1)
+
+    async def _resume_pending(self, pending: dict[str, Any]) -> None:
+        """After a restart: make up an automatic drive that was still waiting when HA stopped."""
+        if self._stopped:
+            return
+        age = dt_util.utcnow().timestamp() - float(pending["due"])
+        self.is_day = self._read_day()
+        if age > PENDING_MAX_AGE:
+            _LOGGER.info("%s: wartende Fahrt vor dem Neustart ist zu alt (%s s), nicht nachgeholt",
+                         self.entry.title, round(age))
+            return
+        if pending.get("shading") or pending.get("phase") != ("day" if self.is_day else "night"):
+            # Shading is re-evaluated from the inputs; a changed phase has a drive of its own
+            return
+        self._reason = "Nachholen nach Neustart"
+        self._log_note("wartende Fahrt vor dem Neustart nachgeholt")
+        await self._apply_auto()
+
     def _cancel_auto_timer(self) -> None:
+        if self._auto_due is not None:
+            self._save_pending(None)
         self._auto_due = None
         if self._auto_cancel:
             self._auto_cancel()
@@ -777,9 +817,11 @@ class Controller:
         def _fire(_now) -> None:
             self._auto_cancel = None
             self._auto_due = None
+            self._save_pending(None)
             self.hass.async_create_task(self._send_delayed(t))
 
         self._auto_due = dt_util.utcnow().timestamp() + delay
+        self._save_pending({"due": self._auto_due, "phase": t["phase"], "shading": self.shading})
         self._auto_cancel = async_call_later(self.hass, delay, _fire)
         self.notify()
 
