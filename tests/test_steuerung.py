@@ -772,3 +772,70 @@ async def test_displayed_drive_times_include_auto_delay(hass, freezer):
     assert e.c.input_value("input_morning") == "2026-11-02T07:31:30+01:00"
     hass.states.async_set("sensor.morgens", "unavailable")
     assert e.c.input_value("input_morning") is None  # unavailable = no value (as before)
+
+
+async def _restart(e):
+    """Neustart nachstellen: Integration entladen und wieder laden (Einstellungen auf Standard)."""
+    entry = e.c.entry
+    await e.hass.async_block_till_done()
+    assert await e.hass.config_entries.async_unload(entry.entry_id)
+    await e.hass.async_block_till_done()
+    assert await e.hass.config_entries.async_setup(entry.entry_id)
+    await e.hass.async_block_till_done()
+    e.c = entry.runtime_data
+
+
+async def test_waiting_drive_is_made_up_after_restart(hass, freezer):
+    e = await setup(hass, freezer)
+    e.c.settings["auto_delay"] = 30
+    await setv(e, "input_boolean.tag", "off")
+    assert not e.pos and e.c.delay_status()[0].startswith("Automatische Fahrt in")
+    await tick(e, 5)
+    await _restart(e)  # Neustart waehrend der Wartezeit
+    await tick(e, 31)  # die Fahrverzoegerung gilt auch fuer die Nachholfahrt
+    assert e.pos and e.pos[-1].data["position"] == 0
+    assert e.c.last_action and "Nachholen nach Neustart" in e.c.last_action
+
+
+async def test_no_makeup_after_restart_when_nothing_waited(hass, freezer):
+    e = await setup(hass, freezer)
+    e.c.settings["auto_delay"] = 5
+    await setv(e, "input_boolean.tag", "off")
+    await tick(e, 6)                                          # Fahrt ist raus
+    n = n_cmds(e)
+    await _restart(e)
+    await tick(e, 31)
+    assert n_cmds(e) == n
+
+
+async def test_no_makeup_after_restart_when_too_old(hass, freezer):
+    e = await setup(hass, freezer)
+    e.c.settings["auto_delay"] = 30
+    await setv(e, "input_boolean.tag", "off")
+    await tick(e, 1)
+    e.hass.states.async_set("input_boolean.tag", "off")
+    entry = e.c.entry
+    assert await e.hass.config_entries.async_unload(entry.entry_id)
+    await e.hass.async_block_till_done()
+    freezer.tick(timedelta(minutes=45))                       # HA war lange aus
+    n = n_cmds(e)
+    assert await e.hass.config_entries.async_setup(entry.entry_id)
+    await e.hass.async_block_till_done()
+    await tick(e, 31)
+    assert n_cmds(e) == n
+
+
+async def test_no_makeup_after_restart_when_phase_changed(hass, freezer):
+    e = await setup(hass, freezer)
+    e.c.settings["auto_delay"] = 30
+    await setv(e, "input_boolean.tag", "off")                 # Nachtfahrt wartet
+    await tick(e, 1)
+    entry = e.c.entry
+    assert await e.hass.config_entries.async_unload(entry.entry_id)
+    await e.hass.async_block_till_done()
+    e.hass.states.async_set("input_boolean.tag", "on")        # waehrend des Neustarts wieder Tag
+    n = n_cmds(e)
+    assert await e.hass.config_entries.async_setup(entry.entry_id)
+    await e.hass.async_block_till_done()
+    await tick(e, 31)
+    assert n_cmds(e) == n

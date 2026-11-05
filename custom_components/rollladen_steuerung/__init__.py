@@ -14,6 +14,7 @@ from homeassistant.helpers import config_validation as cv
 from homeassistant.helpers import entity_registry as er
 from homeassistant.helpers import issue_registry as ir
 from homeassistant.helpers.start import async_at_started
+from homeassistant.helpers.storage import Store
 from homeassistant.helpers.typing import ConfigType
 
 try:
@@ -156,3 +157,4 @@ async def async_unload_entry(hass: HomeAssistant, entry: RollladenSteuerungConfi
 
 async def async_remove_entry(hass: HomeAssistant, entry: RollladenSteuerungConfigEntry) -> None:
     ir.async_delete_issue(hass, DOMAIN, issue_id(entry))
+    await Store(hass, 1, f"{DOMAIN}.pending_{entry.entry_id}").async_remove()

@@ -168,3 +168,5 @@ BUTTONS = [CMD_UP, CMD_DOWN, CMD_STOP, CMD_MYPOS, CMD_BACK]
 
 # Start lock: max. seconds commands wait after a HA start for cover / Homematic service
 START_WAIT_MAX = 300
+# Automatic drive that was still waiting when HA stopped is made up if the stop was at most this long ago
+PENDING_MAX_AGE = 1800
