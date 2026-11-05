@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.10.9
+
+* Drives caused by a window contact (night: ventilation height, opening, closing, and the catch-up after the lock-out protection) now start immediately. The *automatic drive delay* only applies to timer-driven automatic drives (day/night change, shading, release of a block), which can happen at the same time on several shutters.
+* An automatic drive that was still waiting for the drive delay is no longer lost when Home Assistant restarts or the integration is reloaded. It is stored and made up after the start if it is at most 30 minutes old, the phase (day/night) is unchanged and it was not a shading drive.
+* README: the delay description mentions that contact drives are never delayed.
+
 ## 1.10.8
 
 * Card: the drive times (morning/evening) are now HTML-escaped. A text sensor chosen as drive-time source can no longer inject markup into the dashboard.

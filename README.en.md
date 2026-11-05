@@ -72,7 +72,7 @@ All values are entities of the device and are kept across restarts. Defaults are
 | Shading end delay | 300 s | How long a condition must be violated before shading ends |
 | Shading end | previous position | Afterwards go to previous position or day position |
 | Catch-up delay | 30 s | Wait before a drive held back by lock-out protection is made up |
-| **Automatic drive delay** | 0 s (off) | Delays every **automatic** drive (see Logic); manual drives never |
+| **Automatic drive delay** | 0 s (off) | Delays time-driven automatic drives (see Logic); manual drives and drives caused by the window contact never |
 | Slats night (open/closed/tilted) / shading / day | 100 / 0 / 50 / 50 / 100 % | only with *Use slats* |
 | Run time down / up | 30 s | only with position source *Internal*; calibration possible |
 | MyPosition height | 50 % | only with *Internal* and a MyPosition button; calibration possible |
@@ -91,7 +91,7 @@ All values are entities of the device and are kept across restarts. Defaults are
 
 **End of shading**: if **one** condition is no longer met (brightness now against the *end* value), **one** timer starts (*Shading end delay*). If all are met again, it is reset. When it expires, the shutter drives, depending on *Shading end*, to the **previous position** (before shading; after the night = up) or to the **day position**. The targets are driven as positions.
 
-**Automatic drive delay** (number, seconds, default 0 = off): delays every **automatically** generated drive (day/night, shading, catch-up) by this time. Useful so that commands do not interfere with each other on "all shutters down" – set different values per shutter (e.g. 0, 2, 4 s …). Manual drives (buttons, Back, position/slat changes, external command) are **never** delayed. If a new target arrives while waiting, it replaces the waiting one.
+**Automatic drive delay** (number, seconds, default 0 = off): delays every **time-driven** automatic drive (day/night, shading) by this time. Useful so that commands do not interfere with each other on "all shutters down" – set different values per shutter (e.g. 0, 2, 4 s …). Manual drives (buttons, Back, position/slat changes, external command) are **never** delayed, and neither are drives caused by a **window contact** (night height change, catch-up after the lock-out protection): they are practically manual and do not coincide with other shutters. If a new target arrives while waiting, it replaces the waiting one.
 
 **Awning** (device type *Awning*): The control logic is the same as for shutters, i.e. **100 % = retracted, 0 % = extended**. The day/night behaviour differs:
 

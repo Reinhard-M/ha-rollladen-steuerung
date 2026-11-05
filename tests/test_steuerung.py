@@ -545,13 +545,56 @@ async def test_auto_delay_only_for_automatic_drives(hass, freezer):
     assert n_cmds(e) == n + 3
     # neues Ziel waehrend der Wartezeit ersetzt das alte
     n = n_cmds(e)
-    await setv(e, "sensor.kontakt", "tilted")
+    await setv(e, "input_boolean.tag", "on")
     await tick(e, 3)
-    await setv(e, "sensor.kontakt", "open")
+    await setv(e, "input_boolean.tag", "off")
     await tick(e, 4)
     assert n_cmds(e) == n
     await tick(e, 2)
+    assert n_cmds(e) == n + 1 and e.pos[-1].data["position"] == 0
+
+
+async def test_contact_change_skips_auto_delay(hass, freezer):
+    e = await setup(hass, freezer)
+    e.c.settings["auto_delay"] = 5
+    await setv(e, "input_boolean.tag", "off")
+    await tick(e, 6)                                 # Nachtfahrt (verzoegert) ist durch
+    n = n_cmds(e)
+    await setv(e, "sensor.kontakt", "tilted")        # Fensterkontakt: sofort, ohne Fahrverzoegerung
+    assert n_cmds(e) == n + 1 and e.pos[-1].data["position"] == 20
+    assert e.c.delay_status()[0] == "keine"
+    await setv(e, "sensor.kontakt", "closed")
+    assert n_cmds(e) == n + 2 and e.pos[-1].data["position"] == 0
+    # ein wartender Tag/Nacht-Wechsel bleibt verzoegert und wird vom Kontakt-Ziel abgeloest
+    await setv(e, "input_boolean.tag", "on")
+    assert e.c.delay_status()[0].startswith("Automatische Fahrt in")
+    n = n_cmds(e)
+    await tick(e, 6)
     assert n_cmds(e) == n + 1 and e.pos[-1].data["position"] == 100
+
+
+async def test_contact_change_cancels_waiting_drive_and_drives_now(hass, freezer):
+    e = await setup(hass, freezer)
+    e.c.settings["auto_delay"] = 5
+    await setv(e, "input_boolean.tag", "off")        # Nachtfahrt wartet
+    assert not e.pos
+    await setv(e, "sensor.kontakt", "tilted")        # Kontakt: aktuelles Ziel (gekippt) sofort
+    assert e.pos[-1].data["position"] == 20 and e.c.delay_status()[0] == "keine"
+    n = n_cmds(e)
+    await tick(e, 10)
+    assert n_cmds(e) == n                            # der alte wartende Befehl ist verworfen
+
+
+async def test_lockout_catchup_skips_auto_delay(hass, freezer):
+    e = await setup(hass, freezer)
+    e.c.settings["lockout"] = True
+    e.c.settings["auto_delay"] = 5
+    await setv(e, "sensor.kontakt", "open")
+    await setv(e, "input_boolean.tag", "off")
+    assert e.c.blocked and not e.pos
+    await setv(e, "sensor.kontakt", "tilted")
+    await tick(e, 31)                                # Nachhol-Verzoegerung (30 s), keine 5 s extra
+    assert e.pos[-1].data["position"] == 20
 
 
 async def test_auto_delay_zero_is_immediate(hass, freezer):
