@@ -839,3 +839,41 @@ async def test_no_makeup_after_restart_when_phase_changed(hass, freezer):
     await e.hass.async_block_till_done()
     await tick(e, 31)
     assert n_cmds(e) == n
+
+
+async def test_contact_unavailable_does_not_drive(hass, freezer):
+    """Contact sensor becomes unavailable (e.g. Homematic unloaded at HA stop): no drive."""
+    e = await setup(hass, freezer)
+    await setv(e, "input_boolean.tag", "off")
+    n = n_cmds(e)
+    await setv(e, "sensor.kontakt", "unavailable")
+    await setv(e, "sensor.kontakt", "unknown")
+    assert n_cmds(e) == n
+    assert e.c._contact == "closed"               # last known state kept
+    await setv(e, "sensor.kontakt", "closed")      # comes back unchanged: still nothing
+    assert n_cmds(e) == n
+    await setv(e, "sensor.kontakt", "tilted")      # real change afterwards works as before
+    assert e.pos[-1].data["position"] == 20
+
+
+async def test_contact_first_value_after_missing_does_not_drive(hass, freezer):
+    """Contact missing at startup, first valid value later: taken over without driving."""
+    e = await setup(hass, freezer)
+    await setv(e, "input_boolean.tag", "off")
+    e.c._contact = None
+    n = n_cmds(e)
+    await setv(e, "sensor.kontakt", "tilted")
+    assert n_cmds(e) == n and e.c._contact == "tilted"
+
+
+async def test_no_commands_while_stopping(hass, freezer):
+    """While HA is stopping, no drive command is sent."""
+    from homeassistant.core import CoreState
+    e = await setup(hass, freezer)
+    await setv(e, "input_boolean.tag", "off")
+    n = n_cmds(e)
+    hass.set_state(CoreState.stopping)
+    await e.c._apply_auto(delayed=False)
+    await hass.async_block_till_done()
+    assert n_cmds(e) == n
+    hass.set_state(CoreState.running)

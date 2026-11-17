@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.10.10
+
+* A window contact that becomes *unavailable* or *unknown* no longer counts as a window change. Until now, a Home Assistant restart (Homematic is unloaded first, all contacts become unavailable) sent every shutter at night to its "closed" position. The last known contact state is kept; when the contact returns with the same value nothing happens.
+* The first valid contact value after the contact was missing (e.g. Homematic starts later than this integration) is taken over without driving.
+* No drive commands are sent while Home Assistant is stopping.
+
 ## 1.10.9
 
 * Drives caused by a window contact (night: ventilation height, opening, closing, and the catch-up after the lock-out protection) now start immediately. The *automatic drive delay* only applies to timer-driven automatic drives (day/night change, shading, release of a block), which can happen at the same time on several shutters.

@@ -686,8 +686,18 @@ class Controller:
         return float(self.settings["day_pos"])
 
     async def _handle_contact(self) -> None:
-        old, new = self._contact, self.read_contact()
-        self._contact = new
+        new = self.read_contact()
+        if new is None:
+            # Contact unavailable/unknown (e.g. Homematic unloaded at HA stop, CCU gone):
+            # this is not a window change - keep the last known state, do not drive
+            return
+        old, self._contact = self._contact, new
+        if self.hass.state is not CoreState.running:
+            return  # HA starting/stopping: only take over the state
+        if old is None:
+            # First valid value (contact was missing before): take it over without driving
+            self.notify()
+            return
         if new == old or self.is_day is None:
             return
         if self.is_awning:
@@ -966,6 +976,9 @@ class Controller:
             f"{dt_util.now().strftime('%H:%M:%S')} {self._reason}: {domain}.{service} {extra}".strip()
         )
         self.action_log.appendleft(self.last_action)
+        if self._stopped or self.hass.is_stopping:
+            _LOGGER.debug("%s: %s.%s verworfen - Home Assistant wird beendet", self.entry.title, domain, service)
+            return
         if not self._ready.is_set():
             _LOGGER.debug("%s: %s.%s wartet auf die Startsperre", self.entry.title, domain, service)
             await self._ready.wait()
